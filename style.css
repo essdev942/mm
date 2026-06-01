@@ -11,6 +11,20 @@
     --syntax-string: #f1fa8c;
 }
 
+/* Light theme overrides (applied via .light-theme on body) */
+.light-theme {
+    --bg-main: #f6f8fa;
+    --bg-sidebar: #ffffff;
+    --border-color: #e6e6e6;
+    --text-primary: #0b0b0b;
+    --text-secondary: #4a5568;
+    --text-muted: #6b7280;
+    --accent-blue: #007acc;
+    --syntax-comment: #6b7280;
+    --syntax-keyword: #1d4ed8;
+    --syntax-string: #1f7a5f;
+}
+
 * { box-sizing: border-box; margin: 0; padding: 0; }
 body {
     font-family: 'Consolas', 'Courier New', Courier, monospace;
@@ -222,3 +236,49 @@ body {
     .code-editor-body { overflow-y: visible; padding: 15px; }
     .header-socials { display: none; }
 }
+
+/* Responsive improvements for tablets and phones */
+@media (max-width: 1200px) {
+    .left-sidebar { width: 240px; min-width: 240px; max-width: 240px; }
+    .tabs { gap: 6px; }
+}
+
+@media (max-width: 992px) and (min-width: 601px) {
+    .tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .tab { white-space: nowrap; padding: 8px 12px; font-size: 13px; }
+    .code-editor-body { padding: 20px; }
+    .hero-title { font-size: 34px; }
+    .project-img-wrapper { height: 140px; }
+    .product-img { height: 110px; }
+}
+
+@media (max-width: 600px) {
+    /* Hide custom cursor for touch devices */
+    .custom-cyber-cursor { display: none !important; }
+
+    .left-sidebar, .right-navigation { display: none; }
+    .tabs { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+    .tab { white-space: nowrap; padding: 8px 10px; font-size: 12px; }
+
+    body { font-size: 14px; }
+    .hero-title { font-size: 26px; }
+    .hero-desc { font-size: 13px; max-width: 100%; }
+    .code-editor-body { padding: 12px; }
+
+    .project-img-wrapper { height: 120px; }
+    .product-img { height: 100px; }
+    .dashboard-container { grid-template-columns: 1fr; }
+    .terminal-box { height: 90px; }
+
+    .avatar { width: 44px; height: 44px; }
+    .profile-info h2 { font-size: 14px; }
+
+    /* Make grids more vertical-friendly */
+    .tech-grid { grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+    .projects-grid { grid-template-columns: 1fr; }
+    .store-grid { grid-template-columns: 1fr; }
+}
+
+/* Make tabs scrollable on all small widths and improve visual spacing */
+.tabs { display: flex; gap: 10px; align-items: center; }
+.tab { flex-shrink: 0; }
