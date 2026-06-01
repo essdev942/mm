@@ -148,13 +148,18 @@ function deleteProject(id) { projectsData = projectsData.filter(p => p.id !== id
 const cyberCursor = document.querySelector('.custom-cyber-cursor');
 let mouseX = 0, mouseY = 0, curX = 0, curY = 0;
 
-window.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
-function animateCyberCursor() {
-    curX += (mouseX - curX) * 0.2; curY += (mouseY - curY) * 0.2;
-    if(cyberCursor) { cyberCursor.style.left = curX + 'px'; cyberCursor.style.top = curY + 'px'; }
-    requestAnimationFrame(animateCyberCursor);
+// If device supports touch, hide the custom cursor and skip animation
+if ('ontouchstart' in window || navigator.maxTouchPoints > 0) {
+    if (cyberCursor) cyberCursor.style.display = 'none';
+} else {
+    window.addEventListener('mousemove', (e) => { mouseX = e.clientX; mouseY = e.clientY; });
+    function animateCyberCursor() {
+        curX += (mouseX - curX) * 0.2; curY += (mouseY - curY) * 0.2;
+        if(cyberCursor) { cyberCursor.style.left = curX + 'px'; cyberCursor.style.top = curY + 'px'; }
+        requestAnimationFrame(animateCyberCursor);
+    }
+    animateCyberCursor();
 }
-animateCyberCursor();
 
 const interactives = 'a, button, .tab, .tech-card, .product-card, .project-card-premium, input, textarea, .delete-btn, .index-links li';
 document.addEventListener('mouseover', (e) => { if (e.target.closest(interactives)) cyberCursor?.classList.add('hovered'); });
@@ -227,14 +232,17 @@ document.getElementById('contactForm')?.addEventListener('submit', function(e) {
         });
 });
 
-// ⚡ إدارة وإخفاء شاشة الـ Loading: تظهر لمدة ثانية ثم تتلاشى
+// ⚡ إدارة وإخفاء شاشة الـ Loading: تظهر لمدة ثانية ثم تتلاشى وتحميل eslam.info
 window.addEventListener('DOMContentLoaded', () => {
     const loader = document.getElementById('loader');
     if (loader) {
         setTimeout(() => {
             loader.classList.add('fade-out');
             setTimeout(() => {
+                // إخفاء شاشة التحميل وإبقاء محتوى التطبيق كما هو (بدون فتح iframe خارجي)
                 loader.style.display = 'none';
+                // تأكد أن المحتوى مرئي وسمح بالتمرير إن كان مخفيًا
+                document.body.style.overflow = '';
             }, 600); // إخفاء بعد انتهاء التلاشي
         }, 1000); // 1000ms تعني ثانية واحدة كاملة
     }
@@ -242,5 +250,207 @@ window.addEventListener('DOMContentLoaded', () => {
 
 document.addEventListener('DOMContentLoaded', () => { 
     renderAppContent(); 
-    setTimeout(() => { initScrollReveal(); }, 100); 
+    setTimeout(() => { initScrollReveal(); }, 100);
+    // Initialize and apply site settings from dashboard
+    initSiteSettings();
+    initPageEditor();
 });
+
+/* ------------------------- Site Settings Logic ------------------------- */
+const SETTINGS_KEY = 'eslam_site_settings';
+const defaultSettings = {
+    theme: 'dark',
+    accent: '#007acc',
+    showSidebars: true,
+    customCursor: true,
+    baseFontSize: 14
+};
+
+function applySettings(settings) {
+    // Theme
+    if (settings.theme === 'light') document.body.classList.add('light-theme');
+    else document.body.classList.remove('light-theme');
+
+    // Accent color
+    document.documentElement.style.setProperty('--accent-blue', settings.accent);
+
+    // Sidebars
+    const left = document.querySelector('.left-sidebar');
+    const right = document.querySelector('.right-navigation');
+    if (left) left.style.display = settings.showSidebars ? '' : 'none';
+    if (right) right.style.display = settings.showSidebars ? '' : 'none';
+
+    // Custom cursor
+    const cyberCursorEl = document.querySelector('.custom-cyber-cursor');
+    if (cyberCursorEl) cyberCursorEl.style.display = settings.customCursor ? '' : 'none';
+
+    // Base font size
+    document.body.style.fontSize = settings.baseFontSize + 'px';
+
+    // Persist
+    localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+}
+
+function loadSettings() {
+    const raw = localStorage.getItem(SETTINGS_KEY);
+    let s = raw ? JSON.parse(raw) : {};
+    s = Object.assign({}, defaultSettings, s);
+    return s;
+}
+
+function initSiteSettings() {
+    const settings = loadSettings();
+
+    // Elements
+    const themeEl = document.getElementById('settings-theme');
+    const accentEl = document.getElementById('settings-accent');
+    const sidebarsEl = document.getElementById('settings-sidebars');
+    const cursorEl = document.getElementById('settings-cursor');
+    const fontsizeEl = document.getElementById('settings-fontsize');
+    const fontsizeLabel = document.getElementById('settings-fontsize-label');
+    const saveBtn = document.getElementById('settings-save');
+    const resetBtn = document.getElementById('settings-reset');
+
+    if (themeEl) themeEl.value = settings.theme;
+    if (accentEl) accentEl.value = settings.accent;
+    if (sidebarsEl) sidebarsEl.checked = !!settings.showSidebars;
+    if (cursorEl) cursorEl.checked = !!settings.customCursor;
+    if (fontsizeEl) fontsizeEl.value = settings.baseFontSize;
+    if (fontsizeLabel) fontsizeLabel.innerText = settings.baseFontSize;
+
+    // Apply immediately
+    applySettings(settings);
+
+    // Live preview on change
+    if (accentEl) accentEl.addEventListener('input', (e) => {
+        document.documentElement.style.setProperty('--accent-blue', e.target.value);
+    });
+    if (fontsizeEl) fontsizeEl.addEventListener('input', (e) => {
+        fontsizeLabel.innerText = e.target.value;
+        document.body.style.fontSize = e.target.value + 'px';
+    });
+
+    // Save/apply
+    if (saveBtn) saveBtn.addEventListener('click', () => {
+        const newSettings = {
+            theme: themeEl?.value || defaultSettings.theme,
+            accent: accentEl?.value || defaultSettings.accent,
+            showSidebars: !!sidebarsEl?.checked,
+            customCursor: !!cursorEl?.checked,
+            baseFontSize: Number(fontsizeEl?.value) || defaultSettings.baseFontSize
+        };
+        applySettings(newSettings);
+        alert('✅ Site settings applied.');
+    });
+
+    // Reset
+    if (resetBtn) resetBtn.addEventListener('click', () => {
+        localStorage.removeItem(SETTINGS_KEY);
+        applySettings(defaultSettings);
+        if (themeEl) themeEl.value = defaultSettings.theme;
+        if (accentEl) accentEl.value = defaultSettings.accent;
+        if (sidebarsEl) sidebarsEl.checked = defaultSettings.showSidebars;
+        if (cursorEl) cursorEl.checked = defaultSettings.customCursor;
+        if (fontsizeEl) fontsizeEl.value = defaultSettings.baseFontSize;
+        if (fontsizeLabel) fontsizeLabel.innerText = defaultSettings.baseFontSize;
+        alert('⚠️ Settings reset to defaults.');
+    });
+}
+
+/* ------------------------- Page Editor Logic ------------------------- */
+const PAGE_CONTENT_KEY = 'eslam_page_content';
+const defaultPageContent = {
+    heroHTML: 'Architecting Digital <br><span>Efficiency.</span>',
+    heroDesc: 'I specialize in bridging advanced Frontend frameworks with solid Backend logic, building secure API networks, and automating web scrapers or cloud systems.',
+    bioShort: 'I engineer highly scalable web architectures, microservices, and self-made automation infrastructures that optimize modern business workflows.',
+    watermark: 'CORE'
+};
+
+function applyPageContent(content) {
+    const heroEl = document.querySelector('.hero-title');
+    const heroDescEl = document.querySelector('.hero-desc');
+    const bioEl = document.querySelector('.bio-short');
+    const watermarkEl = document.querySelector('.watermark-bg');
+
+    if (heroEl) {
+        heroEl.innerHTML = content.heroHTML;
+        heroEl.setAttribute('data-text', content.heroHTML.replace(/<[^>]*>/g, '').trim());
+    }
+    if (heroDescEl) heroDescEl.innerText = content.heroDesc;
+    if (bioEl) bioEl.innerText = content.bioShort;
+    if (watermarkEl) watermarkEl.innerText = content.watermark;
+
+    // re-run scroll reveal for updated content
+    resetAndTriggerScrollReveal();
+}
+
+function loadPageContent() {
+    const raw = localStorage.getItem(PAGE_CONTENT_KEY);
+    let c = raw ? JSON.parse(raw) : {};
+    c = Object.assign({}, defaultPageContent, c);
+    return c;
+}
+
+function initPageEditor() {
+    const heroInput = document.getElementById('page-hero-title');
+    const heroHtmlInput = document.getElementById('page-hero-html');
+    const heroDescInput = document.getElementById('page-hero-desc');
+    const bioInput = document.getElementById('page-bio-short');
+    const watermarkInput = document.getElementById('page-watermark');
+    const saveBtn = document.getElementById('page-save');
+    const resetBtn = document.getElementById('page-reset');
+
+    const content = loadPageContent();
+
+    // populate editor fields
+    if (heroInput) heroInput.value = content.heroHTML.replace(/<br>/g, '\n').replace(/<[^>]*>/g, '');
+    if (heroHtmlInput) heroHtmlInput.value = content.heroHTML;
+    if (heroDescInput) heroDescInput.value = content.heroDesc;
+    if (bioInput) bioInput.value = content.bioShort;
+    if (watermarkInput) watermarkInput.value = content.watermark;
+
+    // apply content to page
+    applyPageContent(content);
+
+    // live preview
+    if (heroHtmlInput) heroHtmlInput.addEventListener('input', (e) => {
+        const preview = Object.assign({}, content, { heroHTML: e.target.value });
+        applyPageContent(preview);
+    });
+    if (heroDescInput) heroDescInput.addEventListener('input', (e) => {
+        const preview = Object.assign({}, content, { heroDesc: e.target.value });
+        applyPageContent(preview);
+    });
+    if (bioInput) bioInput.addEventListener('input', (e) => {
+        const preview = Object.assign({}, content, { bioShort: e.target.value });
+        applyPageContent(preview);
+    });
+    if (watermarkInput) watermarkInput.addEventListener('input', (e) => {
+        const preview = Object.assign({}, content, { watermark: e.target.value });
+        applyPageContent(preview);
+    });
+
+    // Save
+    if (saveBtn) saveBtn.addEventListener('click', () => {
+        const newContent = {
+            heroHTML: heroHtmlInput?.value || defaultPageContent.heroHTML,
+            heroDesc: heroDescInput?.value || defaultPageContent.heroDesc,
+            bioShort: bioInput?.value || defaultPageContent.bioShort,
+            watermark: watermarkInput?.value || defaultPageContent.watermark
+        };
+        localStorage.setItem(PAGE_CONTENT_KEY, JSON.stringify(newContent));
+        applyPageContent(newContent);
+        alert('✅ Page content saved.');
+    });
+
+    // Reset
+    if (resetBtn) resetBtn.addEventListener('click', () => {
+        localStorage.removeItem(PAGE_CONTENT_KEY);
+        applyPageContent(defaultPageContent);
+        if (heroHtmlInput) heroHtmlInput.value = defaultPageContent.heroHTML;
+        if (heroDescInput) heroDescInput.value = defaultPageContent.heroDesc;
+        if (bioInput) bioInput.value = defaultPageContent.bioShort;
+        if (watermarkInput) watermarkInput.value = defaultPageContent.watermark;
+        alert('⚠️ Page content reset to defaults.');
+    });
+}
