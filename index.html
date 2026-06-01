@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eslam | Full-Stack & Automation Developer</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- مكتبة إرسال الايميلات EmailJS الأساسية -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+</head>
+<body>
+
+    <!-- 🌐 صفحة التحميل الترحيبية (تختفي بعد ثانية واحدة) -->
+    <div class="loading-screen" id="loader">
+        <div class="loader-content">
+            <span class="loader-text">eslam.dev</span>
+            <div class="loader-bar"></div>
+        </div>
+    </div>
+
+    <!-- الماوس البرمجي المطور (بثيم اللون الأزرق) -->
+    <div class="custom-cyber-cursor"></div>
+
+    <div class="app-container">
+        
+        <!-- العمود الأيسر: البيانات الشخصية والسوشيال ميديا الجانبية -->
+        <aside class="left-sidebar">
+            <div class="welcome-text">// System.ready();</div>
+            <div class="profile-card">
+                <img src="images/profile.jpg" alt="Eslam" class="avatar" onerror="this.src='https://via.placeholder.com/60/1c1c1c/ffffff?text=Eslam'">
+                <div class="profile-info">
+                    <h2>Eslam</h2>
+                    <p>Full-Stack & Automation Eng.</p>
+                </div>
+            </div>
+            
+            <div class="bio-short">
+                I engineer highly scalable web architectures, microservices, and self-made automation infrastructures that optimize modern business workflows.
+            </div>
+
+            <!-- قسم السوشيال ميديا الجانبي (محدث بحساباتك) -->
+            <div class="social-medias">
+                <a href="https://wa.me/201127134174" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                <a href="https://www.instagram.com/ess942200" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://www.tiktok.com/@ess.ved" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
+            </div>
+
+            <div class="meta-list">
+                <div class="meta-item"><i class="fas fa-briefcase"></i> 4+ years of experience</div>
+                <div class="meta-item"><i class="fas fa-code-branch"></i> 140+ Git Commits</div>
+                <div class="meta-item"><i class="fas fa-globe"></i> English, Arabic</div>
+                <div class="meta-item"><i class="fas fa-envelope"></i> esslam942@gmail.com</div>
+                <div class="meta-item"><i class="fas fa-phone"></i> +20 112 7134 174</div>
+            </div>
+
+            <a href="assets/cv.pdf" class="download-cv-btn" download>Download CV <i class="fas fa-download"></i></a>
+
+            <div class="sidebar-actions">
+                <button class="btn-action white-btn" onclick="scrollToSection('contact')">Schedule a call</button>
+                <button class="btn-action outline-btn" onclick="scrollToSection('contact')">Work with me</button>
+            </div>
+        </aside>
+
+        <!-- العمود الأوسط: محرر الأكواد والصفحات المفتوحة -->
+        <main class="main-content">
+            <!-- شريط التبويبات العلوي المعدل -->
+            <header class="editor-header">
+                <div class="tabs" id="tabs-container">
+                    <div class="tab" data-target="home">eslam.info</div>
+                    <div class="tab" data-target="projects">work.done</div>
+                    <div class="tab" data-target="store">store.json</div>
+                    <div class="tab active" data-target="contact">contact.json</div>
+                </div>
+                
+                <!-- قسم الـ Status والأيقونات الكبيرة الداكنة المتناسقة -->
+                <div class="status-bar-top">
+                    <div class="header-socials">
+                        <a href="https://wa.me/201127134174" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="https://www.instagram.com/ess942200" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://www.tiktok.com/@ess.ved" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                    </div>
+                    <div class="work-status">
+                        <span class="status-dot"></span> Open to new work • Egypt
+                    </div>
+                </div>
+            </header>
+
+            <!-- مساحة عرض المحتوى الداخلي -->
+            <div class="code-editor-body">
+                
+                <!-- 1. الصفحة الرئيسية (eslam.info) -->
+                <section id="home" class="page-section">
+                    <div class="watermark-bg">CORE</div>
+                    <div class="code-line scroll-reveal"><span class="line-num">1</span><span class="comment">/** @brief Professional Overview */</span></div>
+                    <div class="code-line scroll-reveal"><span class="line-num">2</span><h1 class="hero-title glitch-text" data-text="Architecting Digital Efficiency.">Architecting Digital <br><span>Efficiency.</span></h1></div>
+                    <div class="code-line scroll-reveal"><span class="line-num">3</span><p class="hero-desc">I specialize in bridging advanced Frontend frameworks with solid Backend logic, building secure API networks, and automating web scrapers or cloud systems.</p></div>
+                    
+                    <div class="code-line scroll-reveal"><span class="line-num">4</span><span class="comment">// Inside My Creative & Engineering Core</span></div>
+                    <div class="code-line scroll-reveal"><span class="line-num">5</span><h2 class="section-title">Technical Deep Dive</h2></div>
+                    <div class="about-flex scroll-reveal">
+                        <div class="about-text">
+                            <p>My mission is to eliminate repetitive tasks through intelligent scripts. Whether constructing custom CRM solutions, high-traffic endpoints, or complex database queries, I code with scalability and performance as a strict standard.</p>
+                        </div>
+                    </div>
+
+                    <div class="code-line scroll-reveal"><span class="line-num">6</span><span class="comment">// Business Philosophy & Metrics</span></div>
+                    <div class="code-line scroll-reveal"><span class="line-num">7</span><h2 class="section-title">Engineering High-ROI Solutions</h2></div>
+                    <div class="about-flex scroll-reveal">
+                        <div class="about-text expanded-info">
+                            <p>Every line of code is written to solve business roadblocks. By leveraging event-driven architecture and intelligent background workers, I build web ecosystems that cut server response times by half and completely automate operations that previously required hours of human labor.</p>
+                        </div>
+                    </div>
+
+                    <div class="code-line scroll-reveal"><span class="line-num">8</span><span class="comment">/* Powered Tech Stack & Frameworks */</span></div>
+                    <div class="tech-grid">
+                        <div class="tech-card scroll-reveal"><i class="fab fa-react" style="color: #61dafb;"></i> React/NextJS <span>94%</span></div>
+                        <div class="tech-card scroll-reveal"><i class="fab fa-node-js" style="color: #6cc24a;"></i> Node.js (Express) <span>90%</span></div>
+                        <div class="tech-card scroll-reveal"><i class="fab fa-python" style="color: #3776ab;"></i> Python (Automation) <span>95%</span></div>
+                        <div class="tech-card scroll-reveal"><i class="fas fa-shield-halved" style="color: #3178c6;"></i> TypeScript <span>88%</span></div>
+                        <div class="tech-card scroll-reveal"><i class="fab fa-golang" style="color: #00add8;"></i> Go (Golang) <span>80%</span></div>
+                        <div class="tech-card scroll-reveal"><i class="fab fa-docker" style="color: #2496ed;"></i> Docker Containers <span>85%</span></div>
+                        <div class="tech-card scroll-reveal"><i class="fas fa-database" style="color: #336791;"></i> PostgreSQL & Redis <span>87%</span></div>
+                        <div class="tech-card scroll-reveal"><i class="fas fa-robot" style="color: #bd93f9;"></i> Intelligent Bots <span>92%</span></div>
+                    </div>
+                </section>
+
+                <!-- 2. صفحة أعمالي (work.done) -->
+                <section id="projects" class="page-section">
+                    <div class="watermark-bg">PRODUCTION</div>
+                    <div class="code-line scroll-reveal"><span class="line-num">1</span><span class="comment"><!-- Verified Client Deployments (Hover to view alternative preview) --></span></div>
+                    <div class="projects-grid" id="projects-grid-display">
+                        <!-- المشاريع تظهر هنا تلقائياً عبر الـ JS -->
+                    </div>
+                </section>
+
+                <!-- 3. صفحة المتجر الرقمي (store.json) -->
+                <section id="store" class="page-section">
+                    <div class="watermark-bg">JSON</div>
+                    <div class="code-line scroll-reveal"><span class="line-num">1</span><span class="keyword">const</span> digitalProducts = [</div>
+                    <div class="store-grid">
+                        <!-- المنتجات تظهر هنا تلقائياً عبر الـ JS -->
+                    </div>
+                    <div class="code-line scroll-reveal"><span class="line-num">2</span>];</div>
+                </section>
+
+                <!-- 4. لوحة التحكم السرية (dashboard) -->
+                <section id="dashboard" class="page-section">
+                    <div class="watermark-bg">ROOT</div>
+                    <div class="code-line"><span class="line-num">1</span><span class="keyword">function</span> <span class="function">manageSystem</span>() {</div>
+                    
+                    <div class="dashboard-container">
+                        <div class="admin-card">
+                            <h3><i class="fas fa-plus-circle" style="color: #007acc;"></i> Add New Product</h3>
+                            <form id="add-product-form" class="admin-form">
+                                <input type="text" id="prod-title" placeholder="Product Title" required>
+                                <input type="text" id="prod-category" placeholder="Category" required>
+                                <input type="number" id="prod-price" placeholder="Price ($)" required>
+                                <input type="text" id="prod-img" placeholder="Image URL / Name" required>
+                                <textarea id="prod-desc" placeholder="Product Description..." rows="3" required></textarea>
+                                <button type="submit" class="white-btn btn-action">Publish Product</button>
+                            </form>
+                            <hr class="dash-separator">
+                            <h4>Inventory</h4>
+                            <ul class="inventory-list" id="inventory-display"></ul>
+                        </div>
+
+                        <div class="admin-card">
+                            <h3><i class="fas fa-folder-plus" style="color: #007acc;"></i> Add Done Project</h3>
+                            <form id="add-project-form" class="admin-form">
+                                <input type="text" id="proj-title" placeholder="Project Title" required>
+                                <input type="text" id="proj-img" placeholder="Primary Image URL" required>
+                                <input type="text" id="proj-img-hover" placeholder="Hover Alternative Image URL" required>
+                                <input type="url" id="proj-url" placeholder="Live Project URL (https://...)" required>
+                                <button type="submit" class="white-btn btn-action" style="background-color: #007acc; color: #fff;">Deploy Project</button>
+                            </form>
+                            <hr class="dash-separator">
+                            <h4>Live Deployments</h4>
+                            <ul class="inventory-list" id="projects-inventory-display"></ul>
+                        </div>
+                    </div>
+                    <div class="code-line"><span class="line-num">2</span>}</div>
+                </section>
+
+                <!-- 5. صفحة تواصل معي (contact.json) -->
+                <section id="contact" class="page-section active">
+                    <div class="watermark-bg">CONNECT</div>
+                    <div class="code-line scroll-reveal"><span class="line-num">1</span><span class="keyword">const</span> contactInfo = {</div>
+                    <div class="code-line scroll-reveal"><span class="line-num">2</span>&nbsp;&nbsp;&nbsp;&nbsp;email: <span class="string">"esslam942@gmail.com"</span>,</div>
+                    <div class="code-line scroll-reveal"><span class="line-num">3</span>&nbsp;&nbsp;&nbsp;&nbsp;status: <span class="string">"Live Mailbox Connected"</span></div>
+                    <div class="code-line scroll-reveal"><span class="line-num">4</span>};</div>
+                    
+                    <form id="contactForm" class="contact-form scroll-reveal">
+                        <input type="text" id="user_name" name="user_name" placeholder="Your Full Name" class="form-input" required>
+                        <input type="email" id="user_email" name="user_email" placeholder="Your Professional Email" class="form-input" required>
+                        <textarea id="user_message" name="message" placeholder="Describe your project or requirement..." class="form-input" rows="4" required></textarea>
+                        <button type="submit" id="submit-btn" class="white-btn btn-action" style="width: auto; padding: 12px 35px; align-self: flex-start;">Send Message</button>
+                    </form>
+                </section>
+
+            </div>
+
+            <!-- التيرمينال السفلي -->
+            <div class="terminal-box">
+                <div class="terminal-header"><i class="fas fa-terminal"></i> bash - terminal</div>
+                <div class="terminal-body" id="terminal-out">
+                    <p>System initialized. Type 'help' or enter access token to grant root privileges.</p>
+                </div>
+                <div class="terminal-input-line">
+                    <span class="prompt">eslam@developer:~# </span>
+                    <input type="text" id="terminal-query" placeholder="..." autocomplete="off">
+                </div>
+            </div>
+
+            <footer class="editor-footer">
+                <div>LF • UTF-8 • JavaScript</div>
+                <div>Eslam.dev © 2026</div>
+            </footer>
+        </main>
+
+        <!-- عمود الفهرس الأيمن (Outline) -->
+        <nav class="right-navigation">
+            <div class="index-title">Outline Index</div>
+            <ul class="index-links" id="index-container">
+                <li onclick="scrollToSection('home')">eslam.info</li>
+                <li onclick="scrollToSection('projects')">work.done</li>
+                <li onclick="scrollToSection('store')">store.json</li>
+                <li class="active-link" onclick="scrollToSection('contact')">contact.json</li>
+            </ul>
+        </nav>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
