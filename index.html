@@ -2,10 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no, maximum-scale=1, minimum-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Eslam.dev">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#111111">
+    <meta name="description" content="Eslam - Full-Stack & Automation Developer. Building scalable web architectures and automation solutions.">
+    <meta name="author" content="Eslam">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="format-detection" content="email=no">
     <title>Eslam | Full-Stack & Automation Developer</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css\">
     <!-- مكتبة إرسال الايميلات EmailJS الأساسية -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 </head>
@@ -67,10 +76,11 @@
             <!-- شريط التبويبات العلوي المعدل -->
             <header class="editor-header">
                 <div class="tabs" id="tabs-container">
-                    <div class="tab" data-target="home">eslam.info</div>
+                    <div class="tab active" data-target="home">eslam.info</div>
                     <div class="tab" data-target="projects">work.done</div>
                     <div class="tab" data-target="store">store.json</div>
-                    <div class="tab active" data-target="contact">contact.json</div>
+                    <div class="tab" data-target="contact">contact.json</div>
+                    <div class="tab" data-target="dashboard">dashboard.json</div>
                 </div>
                 
                 <!-- قسم الـ Status والأيقونات الكبيرة الداكنة المتناسقة -->
@@ -80,8 +90,14 @@
                         <a href="https://www.instagram.com/ess942200" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
                         <a href="https://www.tiktok.com/@ess.ved" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
                     </div>
-                    <div class="work-status">
-                        <span class="status-dot"></span> Open to new work • Egypt
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <select id="language-selector" style="background: #141414; border: 1px solid #222; color: white; padding: 6px 10px; border-radius: 4px; font-size: 12px; cursor: pointer;">
+                            <option value="en">English</option>
+                            <option value="ar">العربية</option>
+                        </select>
+                        <div class="work-status">
+                            <span class="status-dot"></span> Open to new work • Egypt
+                        </div>
                     </div>
                 </div>
             </header>
@@ -90,11 +106,14 @@
             <div class="code-editor-body">
                 
                 <!-- 1. الصفحة الرئيسية (eslam.info) -->
-                <section id="home" class="page-section">
+                <section id="home" class="page-section active">
                     <div class="watermark-bg">CORE</div>
                     <div class="code-line scroll-reveal"><span class="line-num">1</span><span class="comment">/** @brief Professional Overview */</span></div>
                     <div class="code-line scroll-reveal"><span class="line-num">2</span><h1 class="hero-title glitch-text" data-text="Architecting Digital Efficiency.">Architecting Digital <br><span>Efficiency.</span></h1></div>
                     <div class="code-line scroll-reveal"><span class="line-num">3</span><p class="hero-desc">I specialize in bridging advanced Frontend frameworks with solid Backend logic, building secure API networks, and automating web scrapers or cloud systems.</p></div>
+                    <div class="hero-image-wrapper scroll-reveal">
+                        <img src="https://via.placeholder.com/900x380?text=Hero+Image" alt="Hero Visual" class="hero-image">
+                    </div>
                     
                     <div class="code-line scroll-reveal"><span class="line-num">4</span><span class="comment">// Inside My Creative & Engineering Core</span></div>
                     <div class="code-line scroll-reveal"><span class="line-num">5</span><h2 class="section-title">Technical Deep Dive</h2></div>
@@ -216,6 +235,9 @@
                                 <label>Hero Description</label>
                                 <textarea id="page-hero-desc" class="form-input" rows="3" placeholder="I specialize in bridging advanced Frontend frameworks with solid Backend logic..."></textarea>
 
+                                <label>Hero Image URL</label>
+                                <input type="url" id="page-hero-image" class="form-input" placeholder="https://...">
+
                                 <label>Short Bio</label>
                                 <textarea id="page-bio-short" class="form-input" rows="2" placeholder="I engineer highly scalable web architectures..."></textarea>
 
@@ -228,12 +250,114 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="admin-card">
+                            <h3><i class="fas fa-image" style="color: #007acc;"></i> Home Image Gallery</h3>
+                            <div class="admin-form">
+                                <label>Add Image URL</label>
+                                <input type="url" id="page-image-url" class="form-input" placeholder="https://...">
+                                <button id="page-add-image" class="white-btn btn-action" style="margin-top: 8px;">Add Gallery Image</button>
+                                <hr class="dash-separator">
+                                <h4>Saved Home Images</h4>
+                                <ul class="inventory-list" id="page-images-list"></ul>
+                            </div>
+                        </div>
+
+                        <div class="admin-card">
+                            <h3><i class="fas fa-user" style="color: #007acc;"></i> Profile & Meta Info</h3>
+                            <div class="admin-form">
+                                <label>Full Name</label>
+                                <input type="text" id="profile-name" class="form-input" placeholder="Eslam">
+
+                                <label>Professional Title</label>
+                                <input type="text" id="profile-title" class="form-input" placeholder="Full-Stack & Automation Eng.">
+
+                                <label>Profile Image URL</label>
+                                <input type="url" id="profile-image" class="form-input" placeholder="https://...">
+
+                                <label>Email</label>
+                                <input type="email" id="profile-email" class="form-input" placeholder="esslam942@gmail.com">
+
+                                <label>Phone</label>
+                                <input type="text" id="profile-phone" class="form-input" placeholder="+20 112 7134 174">
+
+                                <label>Years of Experience</label>
+                                <input type="number" id="meta-experience" class="form-input" placeholder="4" min="0">
+
+                                <label>Git Commits Count</label>
+                                <input type="number" id="meta-commits" class="form-input" placeholder="140" min="0">
+
+                                <label>Languages Known</label>
+                                <input type="text" id="meta-languages" class="form-input" placeholder="English, Arabic">
+
+                                <div style="display:flex; gap:8px; margin-top:8px;">
+                                    <button id="profile-save" class="white-btn btn-action">Save Profile</button>
+                                    <button id="profile-reset" class="outline-btn btn-action">Reset</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="admin-card">
+                            <h3><i class="fas fa-link" style="color: #007acc;"></i> Social Links & Contact</h3>
+                            <div class="admin-form">
+                                <label>WhatsApp</label>
+                                <input type="text" id="social-whatsapp" class="form-input" placeholder="https://wa.me/...">
+
+                                <label>Instagram</label>
+                                <input type="text" id="social-instagram" class="form-input" placeholder="https://instagram.com/...">
+
+                                <label>TikTok</label>
+                                <input type="text" id="social-tiktok" class="form-input" placeholder="https://tiktok.com/@...">
+
+                                <label>GitHub</label>
+                                <input type="text" id="social-github" class="form-input" placeholder="https://github.com/...">
+
+                                <label>LinkedIn</label>
+                                <input type="text" id="social-linkedin" class="form-input" placeholder="https://linkedin.com/in/...">
+
+                                <label>CV Download Link</label>
+                                <input type="text" id="social-cv" class="form-input" placeholder="assets/cv.pdf">
+
+                                <div style="display:flex; gap:8px; margin-top:8px;">
+                                    <button id="social-save" class="white-btn btn-action">Save Links</button>
+                                    <button id="social-reset" class="outline-btn btn-action">Reset</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="admin-card">
+                            <h3><i class="fas fa-globe" style="color: #007acc;"></i> Language Content (EN/AR)</h3>
+                            <div class="admin-form">
+                                <label>English - Hero Title</label>
+                                <input type="text" id="lang-en-title" class="form-input">
+
+                                <label>English - Hero Description</label>
+                                <textarea id="lang-en-desc" class="form-input" rows="2"></textarea>
+
+                                <label>Arabic - Hero Title</label>
+                                <input type="text" id="lang-ar-title" class="form-input">
+
+                                <label>Arabic - Hero Description</label>
+                                <textarea id="lang-ar-desc" class="form-input" rows="2"></textarea>
+
+                                <label>Technical Deep Dive (EN)</label>
+                                <textarea id="lang-tech-en" class="form-input" rows="2"></textarea>
+
+                                <label>الغوص التقني العميق (AR)</label>
+                                <textarea id="lang-tech-ar" class="form-input" rows="2"></textarea>
+
+                                <div style="display:flex; gap:8px; margin-top:8px;">
+                                    <button id="lang-save" class="white-btn btn-action">Save Translations</button>
+                                    <button id="lang-reset" class="outline-btn btn-action">Reset</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <div class="code-line"><span class="line-num">2</span>}</div>
                 </section>
 
                 <!-- 5. صفحة تواصل معي (contact.json) -->
-                <section id="contact" class="page-section active">
+                <section id="contact" class="page-section">
                     <div class="watermark-bg">CONNECT</div>
                     <div class="code-line scroll-reveal"><span class="line-num">1</span><span class="keyword">const</span> contactInfo = {</div>
                     <div class="code-line scroll-reveal"><span class="line-num">2</span>&nbsp;&nbsp;&nbsp;&nbsp;email: <span class="string">"esslam942@gmail.com"</span>,</div>
@@ -275,12 +399,14 @@
                 <li onclick="scrollToSection('home')">eslam.info</li>
                 <li onclick="scrollToSection('projects')">work.done</li>
                 <li onclick="scrollToSection('store')">store.json</li>
-                <li class="active-link" onclick="scrollToSection('contact')">contact.json</li>
+                <li onclick="scrollToSection('contact')">contact.json</li>
+                <li onclick="scrollToSection('dashboard')">dashboard.root</li>
             </ul>
         </nav>
 
     </div>
 
+    <script src="script-enhanced.js"></script>
     <script src="script.js"></script>
 </body>
-</html>>
+</html>
