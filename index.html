@@ -14,19 +14,11 @@
     <meta name="format-detection" content="email=no">
     <title>Eslam | Full-Stack & Automation Developer</title>
     <link rel="stylesheet" href="style.css">
-    <link rel=\"stylesheet\" href=\"https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css\">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- مكتبة إرسال الايميلات EmailJS الأساسية -->
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 </head>
 <body>
-
-    <!-- 🌐 صفحة التحميل الترحيبية (تختفي بعد ثانية واحدة) -->
-    <div class="loading-screen" id="loader">
-        <div class="loader-content">
-            <span class="loader-text">eslam.dev</span>
-            <div class="loader-bar"></div>
-        </div>
-    </div>
 
     <!-- الماوس البرمجي المطور (بثيم اللون الأزرق) -->
     <div class="custom-cyber-cursor"></div>
@@ -34,7 +26,7 @@
     <div class="app-container">
         
         <!-- العمود الأيسر: البيانات الشخصية والسوشيال ميديا الجانبية -->
-        <aside class="left-sidebar">
+        <aside class="left-sidebar" role="complementary" aria-label="Profile sidebar">
             <div class="welcome-text">// System.ready();</div>
             <div class="profile-card">
                 <img src="https://media.discordapp.net/attachments/1375604483546943549/1510833096793128960/profile.jpeg?ex=6a1e4078&is=6a1ceef8&hm=4678093d3bd1974289fb8940f0fd0905f27bed1c8cba70ff9aef19fac16e7b5d&=&format=webp&width=648&height=648" alt="Eslam" class="avatar" onerror="this.src='https://via.placeholder.com/60/1c1c1c/ffffff?text=Eslam'">
@@ -48,11 +40,10 @@
                 I engineer highly scalable web architectures, microservices, and self-made automation infrastructures that optimize modern business workflows.
             </div>
 
-            <!-- قسم السوشيال ميديا الجانبي (محدث بحساباتك) -->
             <div class="social-medias">
-                <a href="https://wa.me/201127134174" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                <a href="https://www.instagram.com/ess942200" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
-                <a href="https://www.tiktok.com/@ess.ved" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
+                <a href="https://wa.me/201127134174" target="_blank" rel="noopener noreferrer" title="WhatsApp"><i class="fab fa-whatsapp" aria-hidden="true"></i><span class="sr-only">WhatsApp</span></a>
+                <a href="https://www.instagram.com/ess942200" target="_blank" rel="noopener noreferrer" title="Instagram"><i class="fab fa-instagram" aria-hidden="true"></i><span class="sr-only">Instagram</span></a>
+                <a href="https://www.tiktok.com/@ess.ved" target="_blank" rel="noopener noreferrer" title="TikTok"><i class="fab fa-tiktok" aria-hidden="true"></i><span class="sr-only">TikTok</span></a>
             </div>
 
             <div class="meta-list">
@@ -71,41 +62,29 @@
             </div>
         </aside>
 
-        <!-- العمود الأوسط: محرر الأكواد والصفحات المفتوحة -->
-        <main class="main-content">
-            <!-- شريط التبويبات العلوي المعدل -->
+        <main class="main-content" role="main">
             <header class="editor-header">
                 <div class="tabs" id="tabs-container">
                     <div class="tab active" data-target="home">eslam.info</div>
                     <div class="tab" data-target="projects">work.done</div>
                     <div class="tab" data-target="store">store.json</div>
                     <div class="tab" data-target="contact">contact.json</div>
-                    <div class="tab" data-target="dashboard">dashboard.json</div>
                 </div>
                 
-                <!-- قسم الـ Status والأيقونات الكبيرة الداكنة المتناسقة -->
                 <div class="status-bar-top">
                     <div class="header-socials">
                         <a href="https://wa.me/201127134174" target="_blank" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
                         <a href="https://www.instagram.com/ess942200" target="_blank" title="Instagram"><i class="fab fa-instagram"></i></a>
                         <a href="https://www.tiktok.com/@ess.ved" target="_blank" title="TikTok"><i class="fab fa-tiktok"></i></a>
                     </div>
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <select id="language-selector" style="background: #141414; border: 1px solid #222; color: white; padding: 6px 10px; border-radius: 4px; font-size: 12px; cursor: pointer;">
-                            <option value="en">English</option>
-                            <option value="ar">العربية</option>
-                        </select>
-                        <div class="work-status">
-                            <span class="status-dot"></span> Open to new work • Egypt
-                        </div>
+                    <div class="work-status">
+                        <span class="status-dot"></span> Open to new work • Egypt
                     </div>
                 </div>
             </header>
 
-            <!-- مساحة عرض المحتوى الداخلي -->
             <div class="code-editor-body">
                 
-                <!-- 1. الصفحة الرئيسية (eslam.info) -->
                 <section id="home" class="page-section active">
                     <div class="watermark-bg">CORE</div>
                     <div class="code-line scroll-reveal"><span class="line-num">1</span><span class="comment">/** @brief Professional Overview */</span></div>
@@ -119,7 +98,7 @@
                     <div class="code-line scroll-reveal"><span class="line-num">5</span><h2 class="section-title">Technical Deep Dive</h2></div>
                     <div class="about-flex scroll-reveal">
                         <div class="about-text">
-                            <p>My mission is to eliminate repetitive tasks through intelligent scripts. Whether constructing custom CRM solutions, high-traffic endpoints, or complex database queries, I code with scalability and performance as a strict standard.</p>
+                            /* Lines 116-117 omitted */
                         </div>
                     </div>
 
@@ -127,7 +106,7 @@
                     <div class="code-line scroll-reveal"><span class="line-num">7</span><h2 class="section-title">Engineering High-ROI Solutions</h2></div>
                     <div class="about-flex scroll-reveal">
                         <div class="about-text expanded-info">
-                            <p>Every line of code is written to solve business roadblocks. By leveraging event-driven architecture and intelligent background workers, I build web ecosystems that cut server response times by half and completely automate operations that previously required hours of human labor.</p>
+                            /* Lines 124-125 omitted */
                         </div>
                     </div>
 
@@ -163,199 +142,6 @@
                     <div class="code-line scroll-reveal"><span class="line-num">2</span>];</div>
                 </section>
 
-                <!-- 4. لوحة التحكم السرية (dashboard) -->
-                <section id="dashboard" class="page-section">
-                    <div class="watermark-bg">ROOT</div>
-                    <div class="code-line"><span class="line-num">1</span><span class="keyword">function</span> <span class="function">manageSystem</span>() {</div>
-                    
-                    <div class="dashboard-container">
-                        <div class="admin-card">
-                            <h3><i class="fas fa-plus-circle" style="color: #007acc;"></i> Add New Product</h3>
-                            <form id="add-product-form" class="admin-form">
-                                <input type="text" id="prod-title" placeholder="Product Title" required>
-                                <input type="text" id="prod-category" placeholder="Category" required>
-                                <input type="number" id="prod-price" placeholder="Price ($)" required>
-                                <input type="text" id="prod-img" placeholder="Image URL / Name" required>
-                                <textarea id="prod-desc" placeholder="Product Description..." rows="3" required></textarea>
-                                <button type="submit" class="white-btn btn-action">Publish Product</button>
-                            </form>
-                            <hr class="dash-separator">
-                            <h4>Inventory</h4>
-                            <ul class="inventory-list" id="inventory-display"></ul>
-                        </div>
-
-                        <div class="admin-card">
-                            <h3><i class="fas fa-folder-plus" style="color: #007acc;"></i> Add Done Project</h3>
-                            <form id="add-project-form" class="admin-form">
-                                <input type="text" id="proj-title" placeholder="Project Title" required>
-                                <input type="text" id="proj-img" placeholder="Primary Image URL" required>
-                                <input type="text" id="proj-img-hover" placeholder="Hover Alternative Image URL" required>
-                                <input type="url" id="proj-url" placeholder="Live Project URL (https://...)" required>
-                                <button type="submit" class="white-btn btn-action" style="background-color: #007acc; color: #fff;">Deploy Project</button>
-                            </form>
-                            <hr class="dash-separator">
-                            <h4>Live Deployments</h4>
-                            <ul class="inventory-list" id="projects-inventory-display"></ul>
-                        </div>
-
-                        <div class="admin-card">
-                            <h3><i class="fas fa-cogs" style="color: #007acc;"></i> Site Settings</h3>
-                            <div class="admin-form">
-                                <label>Theme</label>
-                                <select id="settings-theme" class="form-input">
-                                    <option value="dark">Dark</option>
-                                    <option value="light">Light</option>
-                                </select>
-
-                                <label>Accent Color</label>
-                                <input type="color" id="settings-accent" class="form-input" value="#007acc">
-
-                                <label><input type="checkbox" id="settings-sidebars" checked> Show Sidebars</label>
-                                <label><input type="checkbox" id="settings-cursor" checked> Enable Custom Cursor</label>
-
-                                <label>Base Font Size: <span id="settings-fontsize-label">14</span>px</label>
-                                <input type="range" id="settings-fontsize" min="12" max="20" value="14">
-
-                                <div style="display:flex; gap:8px; margin-top:8px;">
-                                    <button id="settings-save" class="white-btn btn-action">Apply</button>
-                                    <button id="settings-reset" class="outline-btn btn-action">Reset</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="admin-card">
-                            <h3><i class="fas fa-edit" style="color: #007acc;"></i> Edit Home Page (eslam.info)</h3>
-                            <div class="admin-form">
-                                <label>Hero Title</label>
-                                <input type="text" id="page-hero-title" class="form-input" placeholder="Architecting Digital Efficiency.">
-
-                                <label>Hero Subtext / HTML</label>
-                                <textarea id="page-hero-html" class="form-input" rows="3" placeholder="Architecting Digital <br><span>Efficiency.</span>"></textarea>
-
-                                <label>Hero Description</label>
-                                <textarea id="page-hero-desc" class="form-input" rows="3" placeholder="I specialize in bridging advanced Frontend frameworks with solid Backend logic..."></textarea>
-
-                                <label>Hero Image URL</label>
-                                <input type="url" id="page-hero-image" class="form-input" placeholder="https://...">
-
-                                <label>Short Bio</label>
-                                <textarea id="page-bio-short" class="form-input" rows="2" placeholder="I engineer highly scalable web architectures..."></textarea>
-
-                                <label>Watermark Text</label>
-                                <input type="text" id="page-watermark" class="form-input" placeholder="CORE">
-
-                                <div style="display:flex; gap:8px; margin-top:8px;">
-                                    <button id="page-save" class="white-btn btn-action">Save Content</button>
-                                    <button id="page-reset" class="outline-btn btn-action">Reset</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="admin-card">
-                            <h3><i class="fas fa-image" style="color: #007acc;"></i> Home Image Gallery</h3>
-                            <div class="admin-form">
-                                <label>Add Image URL</label>
-                                <input type="url" id="page-image-url" class="form-input" placeholder="https://...">
-                                <button id="page-add-image" class="white-btn btn-action" style="margin-top: 8px;">Add Gallery Image</button>
-                                <hr class="dash-separator">
-                                <h4>Saved Home Images</h4>
-                                <ul class="inventory-list" id="page-images-list"></ul>
-                            </div>
-                        </div>
-
-                        <div class="admin-card">
-                            <h3><i class="fas fa-user" style="color: #007acc;"></i> Profile & Meta Info</h3>
-                            <div class="admin-form">
-                                <label>Full Name</label>
-                                <input type="text" id="profile-name" class="form-input" placeholder="Eslam">
-
-                                <label>Professional Title</label>
-                                <input type="text" id="profile-title" class="form-input" placeholder="Full-Stack & Automation Eng.">
-
-                                <label>Profile Image URL</label>
-                                <input type="url" id="profile-image" class="form-input" placeholder="https://...">
-
-                                <label>Email</label>
-                                <input type="email" id="profile-email" class="form-input" placeholder="esslam942@gmail.com">
-
-                                <label>Phone</label>
-                                <input type="text" id="profile-phone" class="form-input" placeholder="+20 112 7134 174">
-
-                                <label>Years of Experience</label>
-                                <input type="number" id="meta-experience" class="form-input" placeholder="4" min="0">
-
-                                <label>Git Commits Count</label>
-                                <input type="number" id="meta-commits" class="form-input" placeholder="140" min="0">
-
-                                <label>Languages Known</label>
-                                <input type="text" id="meta-languages" class="form-input" placeholder="English, Arabic">
-
-                                <div style="display:flex; gap:8px; margin-top:8px;">
-                                    <button id="profile-save" class="white-btn btn-action">Save Profile</button>
-                                    <button id="profile-reset" class="outline-btn btn-action">Reset</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="admin-card">
-                            <h3><i class="fas fa-link" style="color: #007acc;"></i> Social Links & Contact</h3>
-                            <div class="admin-form">
-                                <label>WhatsApp</label>
-                                <input type="text" id="social-whatsapp" class="form-input" placeholder="https://wa.me/...">
-
-                                <label>Instagram</label>
-                                <input type="text" id="social-instagram" class="form-input" placeholder="https://instagram.com/...">
-
-                                <label>TikTok</label>
-                                <input type="text" id="social-tiktok" class="form-input" placeholder="https://tiktok.com/@...">
-
-                                <label>GitHub</label>
-                                <input type="text" id="social-github" class="form-input" placeholder="https://github.com/...">
-
-                                <label>LinkedIn</label>
-                                <input type="text" id="social-linkedin" class="form-input" placeholder="https://linkedin.com/in/...">
-
-                                <label>CV Download Link</label>
-                                <input type="text" id="social-cv" class="form-input" placeholder="assets/cv.pdf">
-
-                                <div style="display:flex; gap:8px; margin-top:8px;">
-                                    <button id="social-save" class="white-btn btn-action">Save Links</button>
-                                    <button id="social-reset" class="outline-btn btn-action">Reset</button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="admin-card">
-                            <h3><i class="fas fa-globe" style="color: #007acc;"></i> Language Content (EN/AR)</h3>
-                            <div class="admin-form">
-                                <label>English - Hero Title</label>
-                                <input type="text" id="lang-en-title" class="form-input">
-
-                                <label>English - Hero Description</label>
-                                <textarea id="lang-en-desc" class="form-input" rows="2"></textarea>
-
-                                <label>Arabic - Hero Title</label>
-                                <input type="text" id="lang-ar-title" class="form-input">
-
-                                <label>Arabic - Hero Description</label>
-                                <textarea id="lang-ar-desc" class="form-input" rows="2"></textarea>
-
-                                <label>Technical Deep Dive (EN)</label>
-                                <textarea id="lang-tech-en" class="form-input" rows="2"></textarea>
-
-                                <label>الغوص التقني العميق (AR)</label>
-                                <textarea id="lang-tech-ar" class="form-input" rows="2"></textarea>
-
-                                <div style="display:flex; gap:8px; margin-top:8px;">
-                                    <button id="lang-save" class="white-btn btn-action">Save Translations</button>
-                                    <button id="lang-reset" class="outline-btn btn-action">Reset</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="code-line"><span class="line-num">2</span>}</div>
-                </section>
-
                 <!-- 5. صفحة تواصل معي (contact.json) -->
                 <section id="contact" class="page-section">
                     <div class="watermark-bg">CONNECT</div>
@@ -364,12 +150,18 @@
                     <div class="code-line scroll-reveal"><span class="line-num">3</span>&nbsp;&nbsp;&nbsp;&nbsp;status: <span class="string">"Live Mailbox Connected"</span></div>
                     <div class="code-line scroll-reveal"><span class="line-num">4</span>};</div>
                     
-                    <form id="contactForm" class="contact-form scroll-reveal">
-                        <input type="text" id="user_name" name="user_name" placeholder="Your Full Name" class="form-input" required>
-                        <input type="email" id="user_email" name="user_email" placeholder="Your Professional Email" class="form-input" required>
-                        <textarea id="user_message" name="message" placeholder="Describe your project or requirement..." class="form-input" rows="4" required></textarea>
-                        <button type="submit" id="submit-btn" class="white-btn btn-action" style="width: auto; padding: 12px 35px; align-self: flex-start;">Send Message</button>
-                    </form>
+                        <form id="contactForm" class="contact-form scroll-reveal" aria-label="Contact form">
+                            <label for="user_name" class="sr-only">Your full name</label>
+                            <input type="text" id="user_name" name="user_name" placeholder="Your Full Name" class="form-input" aria-label="Your full name" required>
+
+                            <label for="user_email" class="sr-only">Your professional email</label>
+                            <input type="email" id="user_email" name="user_email" placeholder="Your Professional Email" class="form-input" aria-label="Your professional email" required>
+
+                            <label for="user_message" class="sr-only">Message</label>
+                            <textarea id="user_message" name="message" placeholder="Describe your project or requirement..." class="form-input" rows="4" aria-label="Message" required></textarea>
+
+                            <button type="submit" id="submit-btn" class="white-btn btn-action" style="width: auto; padding: 12px 35px; align-self: flex-start;" aria-label="Send message">Send Message</button>
+                        </form>
                 </section>
 
             </div>
@@ -393,14 +185,13 @@
         </main>
 
         <!-- عمود الفهرس الأيمن (Outline) -->
-        <nav class="right-navigation">
+        <nav class="right-navigation" role="navigation" aria-label="Outline index">
             <div class="index-title">Outline Index</div>
             <ul class="index-links" id="index-container">
                 <li onclick="scrollToSection('home')">eslam.info</li>
                 <li onclick="scrollToSection('projects')">work.done</li>
                 <li onclick="scrollToSection('store')">store.json</li>
                 <li onclick="scrollToSection('contact')">contact.json</li>
-                <li onclick="scrollToSection('dashboard')">dashboard.root</li>
             </ul>
         </nav>
 
@@ -408,5 +199,16 @@
 
     <script src="script-enhanced.js"></script>
     <script src="script.js"></script>
+    <!-- Project lightbox modal -->
+    <div id="project-lightbox" class="lightbox" aria-hidden="true">
+        <button class="lightbox-close" aria-label="Close gallery">×</button>
+        <div class="lightbox-content">
+            <button class="lightbox-prev" aria-label="Previous">‹</button>
+            <img class="lightbox-img" src="" alt="Project image">
+            <button class="lightbox-next" aria-label="Next">›</button>
+        </div>
+        <div class="lightbox-caption"></div>
+        <a class="lightbox-live" target="_blank" rel="noopener noreferrer">Open Live</a>
+    </div>
 </body>
 </html>
