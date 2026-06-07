@@ -28,6 +28,58 @@ function initFirebase() {
     listenToCloudData();
 }
 
+/* ---------------- Lightbox gallery ---------------- */
+const lightbox = document.getElementById('project-lightbox');
+const lightboxImg = lightbox?.querySelector('.lightbox-img');
+const lightboxCaption = lightbox?.querySelector('.lightbox-caption');
+const lightboxLive = lightbox?.querySelector('.lightbox-live');
+let currentGallery = [];
+let currentIndex = 0;
+
+function openProjectGallery(projectId, startIndex = 0) {
+    const proj = projectsData.find(p => p.id === projectId);
+    if (!proj || !proj.gallery || proj.gallery.length === 0) return;
+    currentGallery = proj.gallery.slice();
+    currentIndex = startIndex;
+    showLightboxImage(currentIndex);
+    if (lightbox) { lightbox.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; }
+    if (lightboxLive && proj.url && proj.url !== '#') { lightboxLive.href = proj.url; lightboxLive.style.display = 'inline-block'; } else if (lightboxLive) { lightboxLive.style.display = 'none'; }
+}
+
+function closeLightbox() {
+    if (lightbox) { lightbox.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; }
+}
+
+function showLightboxImage(index) {
+    if (!currentGallery || currentGallery.length === 0) return;
+    currentIndex = (index + currentGallery.length) % currentGallery.length;
+    const src = currentGallery[currentIndex];
+    if (lightboxImg) { lightboxImg.src = src; }
+    if (lightboxCaption) { lightboxCaption.textContent = `${currentIndex+1} / ${currentGallery.length}`; }
+}
+
+function nextLightbox() { showLightboxImage(currentIndex + 1); }
+function prevLightbox() { showLightboxImage(currentIndex - 1); }
+
+// attach lightbox controls after DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+    const lb = document.getElementById('project-lightbox');
+    if (!lb) return;
+    lb.querySelector('.lightbox-close').addEventListener('click', closeLightbox);
+    lb.querySelector('.lightbox-next').addEventListener('click', nextLightbox);
+    lb.querySelector('.lightbox-prev').addEventListener('click', prevLightbox);
+    // close on backdrop click
+    lb.addEventListener('click', (e) => { if (e.target === lb) closeLightbox(); });
+    // keyboard
+    document.addEventListener('keydown', (e) => {
+        if (lb.getAttribute('aria-hidden') === 'false') {
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowRight') nextLightbox();
+            if (e.key === 'ArrowLeft') prevLightbox();
+        }
+    });
+});
+
 function listenToCloudData() {
     if (!db) return;
 
@@ -53,21 +105,67 @@ function listenToCloudData() {
 }
 
 // كشف نوع جهاز الزائر للتوافقية
-const isMobile = () => window.innerWidth <= 768 || 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-const isTablet = () => window.innerWidth > 768 && window.innerWidth <= 1200;
-const isDesktop = () => window.innerWidth > 1200;
+const deviceType = {
+    isMobile: () => window.innerWidth <= 768 || 'ontouchstart' in window || navigator.maxTouchPoints > 0,
+    isTablet: () => window.innerWidth > 768 && window.innerWidth <= 1200,
+    isDesktop: () => window.innerWidth > 1200
+};
+
 
 // إدارة وتخزين بيانات المنتجات والمشاريع محلياً
 let defaultProducts = [
-    { id: 1, title: "NextJS 14 SaaS Boilerplate", category: "Script", price: "49.00", desc: "Production-ready system with PostgreSQL & iron-clad Auth layer.", img: "images/prod1.jpg" },
-    { id: 2, title: "Automated Lead Engine Bot", category: "Bot", price: "35.00", desc: "High-performance Go/Python automated pipeline for business scraping.", img: "images/prod2.jpg" }
+    { id: 1, title: "NextJS 14 SaaS Boilerplate", category: "Script", price: "49.00", desc: "Production-ready SaaS starter with PostgreSQL and secure auth.", img: "https://source.unsplash.com/600x400/?saas,web,dashboard" },
+    { id: 2, title: "Automated Lead Engine Bot", category: "Bot", price: "35.00", desc: "High-performance automated pipeline for lead scraping and enrichment.", img: "https://source.unsplash.com/600x400/?automation,robot,code" },
+    { id: 3, title: "Telegram Payment & Order Bot (Custom)", category: "Service", price: "50.00", desc: "Telegram bot for payment confirmations and order management (Salla integration).", img: "https://source.unsplash.com/600x400/?telegram,bot,payment" },
+    { id: 4, title: "Landing / Website (Small)", category: "Service", price: "50.00+", desc: "Small marketing/portfolio websites — base price $50, adjustable by scope.", img: "https://source.unsplash.com/600x400/?website,landing,design" },
+    { id: 5, title: "Android & iOS App (Basic)", category: "Service", price: "250.00+", desc: "Basic cross-platform mobile app starter — pricing starts at $250.", img: "https://source.unsplash.com/600x400/?mobile,app,ui" }
 ];
 if (!localStorage.getItem('eslam_products')) { localStorage.setItem('eslam_products', JSON.stringify(defaultProducts)); }
 let products = JSON.parse(localStorage.getItem('eslam_products')) || [];
 
 let defaultProjects = [
-    { id: 1, title: "Fintech Dashboard Suite", img: "images/proj1.jpg", imgHover: "images/proj1_hover.jpg", url: "https://github.com" },
-    { id: 2, title: "AI Cloud Automation Bot", img: "images/proj2.jpg", imgHover: "images/proj2_hover.jpg", url: "https://github.com" }
+    { id: 1, title: "Eslam | Full Stack Developer & Bot Architect", img: "https://via.placeholder.com/900x380?text=eslam.dev+project", imgHover: "https://via.placeholder.com/900x380?text=eslam.dev+hover", url: "https://wap-tau.vercel.app/#home",
+        gallery: [
+            "https://ibb.co/QvDp8WWG",
+            "https://ibb.co/twrNXk3W",
+            "https://ibb.co/JWdXp8LF",
+            "https://ibb.co/Qj6HcgzQ",
+            "https://ibb.co/V0z2gT4d",
+            "https://ibb.co/Dqzgr42",
+            "https://ibb.co/1tqZwKQz",
+            "https://ibb.co/gFwmQ9Ps",
+            "https://ibb.co/xn4fDwK"
+        ]
+    },
+    { id: 2, title: "napoliegy.net", img: "https://via.placeholder.com/900x380?text=napoliegy.net", imgHover: "https://via.placeholder.com/900x380?text=napoliegy.net+hover", url: "https://napoliegy.net",
+        gallery: [
+            "https://ibb.co/G4L7vJ3g",
+            "https://ibb.co/8LrT8Nkq",
+            "https://ibb.co/3msrK3gx",
+            "https://ibb.co/JW11BJNg",
+            "https://ibb.co/qMxZDMV5",
+            "https://ibb.co/Fqyn0ZgT",
+            "https://ibb.co/zh2H1gQg",
+            "https://ibb.co/tTk7rzxx"
+        ]
+    },
+    { id: 3, title: "vernisegy.com", img: "https://via.placeholder.com/900x380?text=vernisegy.com", imgHover: "https://via.placeholder.com/900x380?text=vernisegy+hover", url: "https://vernisegy.com",
+        gallery: [
+            "https://ibb.co/jPxjbNfM",
+            "https://ibb.co/spjnXyjX",
+            "https://ibb.co/r2zB2ByV",
+            "https://ibb.co/WWyWnjXG",
+            "https://ibb.co/QF4xqfbn"
+        ]
+    },
+    { id: 4, title: "Telegram Payment Bot for Salla", img: "https://via.placeholder.com/900x380?text=Telegram+Salla+Bot", imgHover: "https://via.placeholder.com/900x380?text=Telegram+Salla+Bot+hover", url: "#",
+        gallery: [
+            "https://ibb.co/MxmdwbgF",
+            "https://ibb.co/mFVWBWm4",
+            "https://ibb.co/W4HDgPtX",
+            "https://ibb.co/7tcL2dFs"
+        ]
+    }
 ];
 if (!localStorage.getItem('eslam_projects')) { localStorage.setItem('eslam_projects', JSON.stringify(defaultProjects)); }
 let projectsData = JSON.parse(localStorage.getItem('eslam_projects')) || [];
@@ -87,16 +185,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: document.getElementById('prod-category').value,
                 price: document.getElementById('prod-price').value,
                 img: document.getElementById('prod-img').value,
-                desc: document.getElementById('prod-desc').value
+                desc: document.getElementById('prod-desc').value,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
 
             if (dbInitialized && db) {
-                // إضافة الوقت السحابي فقط عند استقرار اتصال Firebase
-                product.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
                 db.collection('products').add(product)
                     .then(() => {
                         this.reset();
-                        showDashToast?.('🚀 Product pushed to Firebase!');
+                        alert('🚀 Product pushed to Firebase!');
                         resetAndTriggerScrollReveal();
                     })
                     .catch((error) => {
@@ -104,12 +201,11 @@ document.addEventListener('DOMContentLoaded', () => {
                         alert('Failed to add product to Firebase. Check console.');
                     });
             } else {
-                const localProduct = { id: Date.now(), ...product, updatedAt: new Date().toISOString() };
-                products.push(localProduct);
+                products.push({ id: Date.now(), ...product });
                 localStorage.setItem('eslam_products', JSON.stringify(products));
                 renderAppContent();
                 this.reset();
-                showDashToast?.('🚀 Product pushed locally (offline mode).');
+                alert('🚀 Product pushed locally (offline mode).');
                 resetAndTriggerScrollReveal();
             }
         });
@@ -123,15 +219,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: document.getElementById('proj-title').value,
                 img: document.getElementById('proj-img').value,
                 imgHover: document.getElementById('proj-img-hover').value,
-                url: document.getElementById('proj-url').value
+                url: document.getElementById('proj-url').value,
+                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
             };
 
             if (dbInitialized && db) {
-                project.updatedAt = firebase.firestore.FieldValue.serverTimestamp();
                 db.collection('projects').add(project)
                     .then(() => {
                         this.reset();
-                        showDashToast?.('🛡️ Project deployed to Firebase successfully!');
+                        alert('🛡️ Project deployed to Firebase successfully!');
                         resetAndTriggerScrollReveal();
                     })
                     .catch((error) => {
@@ -139,24 +235,23 @@ document.addEventListener('DOMContentLoaded', () => {
                         alert('Failed to add project to Firebase. Check console.');
                     });
             } else {
-                const localProject = { id: Date.now(), ...project, updatedAt: new Date().toISOString() };
-                projectsData.push(localProject);
+                projectsData.push({ id: Date.now(), ...project });
                 localStorage.setItem('eslam_projects', JSON.stringify(projectsData));
                 renderAppContent();
                 this.reset();
-                showDashToast?.('🛡️ Project deployed locally (offline mode).');
+                alert('🛡️ Project deployed locally (offline mode).');
                 resetAndTriggerScrollReveal();
             }
         });
     }
 });
-
 // 🟢 تهيئة مكتبة EmailJS برقم الـ Public Key الخاص بك
 (function() { 
-    if (typeof emailjs !== 'undefined') {
-        emailjs.init("YOUR_PUBLIC_KEY"); 
-    }
+    emailjs.init("YOUR_PUBLIC_KEY"); 
 })();
+
+// 📱 كشف نوع الجهاز والتوافقية
+// تم تعريف هذه الدوال سابقاً في بداية الملف لضمان عدم التكرار.
 
 // 🔄 معالج تغيير حجم النافذة
 let resizeTimer;
@@ -194,13 +289,17 @@ document.addEventListener('click', function(e) {
 
 function scrollToSection(pageId) {
     const targetTab = document.querySelector(`.tab[data-target="${pageId}"]`);
-    if (targetTab) { 
-        targetTab.click(); 
-    } else if(pageId === 'dashboard') {
-        pages.forEach(page => page.classList.remove('active'));
-        document.getElementById('dashboard').classList.add('active');
-        updateIndexStyle('dashboard');
-        resetAndTriggerScrollReveal();
+    if (targetTab) {
+        targetTab.click();
+    } else {
+        // If there's a page section without a tab, activate it directly
+        const page = document.getElementById(pageId);
+        if (page) {
+            pages.forEach(p => p.classList.remove('active'));
+            page.classList.add('active');
+            updateIndexStyle(pageId);
+            resetAndTriggerScrollReveal();
+        }
     }
 }
 
@@ -238,8 +337,7 @@ function renderAppContent() {
     if(inventoryDisplay) {
         inventoryDisplay.innerHTML = '';
         products.forEach(prod => {
-            // تم تصليح تمرير الـ id هنا بوضعه داخل علامات تنصيص مفردة
-            inventoryDisplay.innerHTML += `<li><span>${prod.title} ($${prod.price})</span><button class="delete-btn" onclick="deleteProduct('${prod.id}')"><i class="fas fa-trash"></i></button></li>`;
+            inventoryDisplay.innerHTML += `<li><span>${prod.title} ($${prod.price})</span><button class="delete-btn" onclick="deleteProduct(${prod.id})"><i class="fas fa-trash"></i></button></li>`;
         });
     }
 
@@ -248,30 +346,32 @@ function renderAppContent() {
     if(projectsGrid) {
         projectsGrid.innerHTML = '';
         projectsData.forEach(proj => {
-            projectsGrid.innerHTML += `
-                <div class="project-card-premium scroll-reveal" onclick="window.open('${proj.url}', '_blank')">
-                    <div class="proj-header">
-                        <h3>${proj.title}</h3> 
-                        <i class="fas fa-arrow-up-right-from-square"></i>
-                    </div>
-                    <div class="project-img-wrapper">
-                        <img src="${proj.img}" class="img-primary" alt="${proj.title}" onerror="this.src='https://via.placeholder.com/400x200/1c1c1c/ffffff?text=Eslam+Deployment'">
-                        <img src="${proj.imgHover || proj.img}" class="img-hover-alt" alt="${proj.title} Preview" onerror="this.style.display='none'">
-                    </div>
-                </div>`;
+                // create gallery-aware project card
+                const galleryJson = JSON.stringify(proj.gallery || []);
+                projectsGrid.innerHTML += `
+                    <div class="project-card-premium scroll-reveal">
+                        <button class="gallery-btn" onclick='openProjectGallery(${proj.id}, 0); event.stopPropagation();'>Gallery</button>
+                        <div class="proj-header">
+                            <h3>${proj.title}</h3>
+                            <i class="fas fa-arrow-up-right-from-square" title="Open live"></i>
+                        </div>
+                        <div class="project-img-wrapper" data-gallery='${galleryJson}' data-url='${proj.url}'>
+                            <img src="${proj.img}" class="img-primary" alt="${proj.title}" onerror="this.src='https://via.placeholder.com/400x200/1c1c1c/ffffff?text=Eslam+Deployment'">
+                            <img src="${proj.imgHover || proj.img}" class="img-hover-alt" alt="${proj.title} Preview" onerror="this.style.display='none'">
+                        </div>
+                    </div>`;
         });
     }
     if(projectsInventory) {
         projectsInventory.innerHTML = '';
         projectsData.forEach(proj => {
-            // تم تصليح تمرير الـ id هنا بوضعه داخل علامات تنصيص مفردة
-            projectsInventory.innerHTML += `<li><span>${proj.title}</span><button class="delete-btn" onclick="deleteProject('${proj.id}')"><i class="fas fa-trash"></i></button></li>`;
+            projectsInventory.innerHTML += `<li><span>${proj.title}</span><button class="delete-btn" onclick="deleteProject(${proj.id})"><i class="fas fa-trash"></i></button></li>`;
         });
     }
 }
 
 function deleteProduct(id) {
-    if (dbInitialized && db && typeof id === 'string' && isNaN(id)) {
+    if (dbInitialized && db && typeof id === 'string') {
         db.collection('products').doc(id).delete()
             .then(() => {
                 showDashToast?.('Product deleted from Firebase');
@@ -279,13 +379,13 @@ function deleteProduct(id) {
             .catch((error) => console.error('Failed to delete product from Firebase:', error));
         return;
     }
-    products = products.filter(p => p.id != id);
+    products = products.filter(p => p.id !== id);
     localStorage.setItem('eslam_products', JSON.stringify(products));
     renderAppContent();
 }
 
 function deleteProject(id) {
-    if (dbInitialized && db && typeof id === 'string' && isNaN(id)) {
+    if (dbInitialized && db && typeof id === 'string') {
         db.collection('projects').doc(id).delete()
             .then(() => {
                 showDashToast?.('Project deleted from Firebase');
@@ -293,7 +393,7 @@ function deleteProject(id) {
             .catch((error) => console.error('Failed to delete project from Firebase:', error));
         return;
     }
-    projectsData = projectsData.filter(p => p.id != id);
+    projectsData = projectsData.filter(p => p.id !== id);
     localStorage.setItem('eslam_projects', JSON.stringify(projectsData));
     renderAppContent();
 }
@@ -303,6 +403,7 @@ const cyberCursor = document.querySelector('.custom-cyber-cursor');
 let mouseX = 0, mouseY = 0, curX = 0, curY = 0;
 let isTouchDevice = false;
 
+// كشف دقيق للأجهزة اللمسية (استخدام الدالة الموحدة)
 function detectTouchDevice() {
     const hasTouchPoints = navigator.maxTouchPoints > 0;
     const hasTouchEvent = 'ontouchstart' in window;
@@ -310,9 +411,10 @@ function detectTouchDevice() {
     return hasTouchPoints || hasTouchEvent || hasCoarsePointer;
 }
 
-isTouchDevice = detectTouchDevice();
+isTouchDevice = deviceType.isMobile();
 
-if (!isTouchDevice && isDesktop()) {
+// إظهار الماوس فقط على الأجهزة غير اللمسية
+if (!isTouchDevice && deviceType.isDesktop()) {
     if (cyberCursor) cyberCursor.style.display = 'block';
     
     window.addEventListener('mousemove', (e) => { 
@@ -338,33 +440,9 @@ const interactives = 'a, button, .tab, .tech-card, .product-card, .project-card-
 document.addEventListener('mouseover', (e) => { if (e.target.closest(interactives)) cyberCursor?.classList.add('hovered'); });
 document.addEventListener('mouseout', (e) => { if (e.target.closest(interactives)) cyberCursor?.classList.remove('hovered'); });
 
-// 🌐 معالج اختيار اللغات
-const languageSelector = document.getElementById('language-selector');
-if (languageSelector) {
-    const savedLanguage = localStorage.getItem('selectedLanguage') || 'en';
-    languageSelector.value = savedLanguage;
-    
-    languageSelector.addEventListener('change', (e) => {
-        const lang = e.target.value;
-        localStorage.setItem('selectedLanguage', lang);
-        
-        if (lang === 'ar') {
-            document.documentElement.dir = 'rtl';
-            document.documentElement.lang = 'ar';
-        } else {
-            document.documentElement.dir = 'ltr';
-            document.documentElement.lang = 'en';
-        }
-    });
-    
-    if (savedLanguage === 'ar') {
-        document.documentElement.dir = 'rtl';
-        document.documentElement.lang = 'ar';
-    }
-}
-
 // 📱 تحسينات Touch للهواتف الذكية
-if (isMobile()) {
+if (deviceType.isMobile()) {
+    // إضافة Active State للعناصر عند اللمس
     document.addEventListener('touchstart', (e) => {
         const el = e.target.closest(interactives);
         if (el) el.classList.add('active-touch');
@@ -380,16 +458,18 @@ function initScrollReveal() {
     const revealTargets = document.querySelectorAll('.scroll-reveal');
     if (textObserver) textObserver.disconnect();
 
+    // تحسين الـ intersection observer للهواتف الذكية
     const observerOptions = {
         root: document.querySelector('.code-editor-body'),
-        threshold: isMobile() ? 0.01 : 0.05,
-        rootMargin: isMobile() ? "30px 0px 30px 0px" : "50px 0px 50px 0px"
+        threshold: deviceType.isMobile() ? 0.01 : 0.05,
+        rootMargin: deviceType.isMobile() ? "30px 0px 30px 0px" : "50px 0px 50px 0px"
     };
 
     textObserver = new IntersectionObserver((entries) => {
         entries.forEach(entry => {
             if (entry.isIntersecting) { 
                 entry.target.classList.add('revealed');
+                // فصل المراقب بعد الكشف لتحسين الأداء
                 textObserver.unobserve(entry.target);
             }
         });
@@ -403,7 +483,7 @@ function initScrollReveal() {
 
 function resetAndTriggerScrollReveal() {
     document.querySelectorAll('.scroll-reveal').forEach(el => el.classList.remove('revealed'));
-    setTimeout(initScrollReveal, isMobile() ? 100 : 50);
+    setTimeout(initScrollReveal, deviceType.isMobile() ? 100 : 50);
 }
 
 // تيرمينال وبوابة الـ Dashboard
@@ -419,13 +499,10 @@ if(terminalInput) {
             terminalOut.appendChild(p);
 
             if(val === SECRET_KEY) {
-                if(!document.querySelector('.tab[data-target="dashboard"]')) {
-                    const newTab = document.createElement('div'); newTab.className = "tab"; newTab.setAttribute('data-target', 'dashboard'); newTab.style.color = "#007acc"; newTab.innerHTML = `<i class="fas fa-user-shield"></i> dashboard.json`;
-                    tabsContainer.appendChild(newTab);
-                    const newIndex = document.createElement('li'); newIndex.setAttribute('onclick', "scrollToSection('dashboard')"); newIndex.style.color = "#007acc"; newIndex.innerText = "dashboard.root";
-                    document.getElementById('index-container').appendChild(newIndex);
-                }
-                scrollToSection('dashboard');
+                const notice = document.createElement('p');
+                notice.textContent = 'Dashboard feature has been removed. Manage content via code or the admin scripts.';
+                terminalOut.appendChild(notice);
+            
             } else if (val.toLowerCase() === 'clear') { terminalOut.innerHTML = ''; }
             this.value = ''; terminalOut.scrollTop = terminalOut.scrollHeight;
         }
@@ -441,6 +518,7 @@ document.getElementById('contactForm')?.addEventListener('submit', function(e) {
     submitBtn.style.opacity = "0.6";
     submitBtn.disabled = true;
 
+    // فحص الاتصال بالإنترنت قبل الإرسال
     if (!navigator.onLine) {
         alert('⚠️ No internet connection. Please check your connection and try again.');
         submitBtn.innerText = originalText;
@@ -465,29 +543,10 @@ document.getElementById('contactForm')?.addEventListener('submit', function(e) {
         });
 });
 
-// ⚡ إدارة وإخفاء شاشة الـ Loading
-window.addEventListener('DOMContentLoaded', () => {
-    const loader = document.getElementById('loader');
-    const startTime = performance.now();
-    
-    if (loader) {
-        setTimeout(() => {
-            loader.classList.add('fade-out');
-            setTimeout(() => {
-                loader.style.display = 'none';
-                document.body.style.overflow = '';
-            }, 600);
-        }, Math.max(800, 1000 - (performance.now() - startTime)));
-    }
-    
-    if (isMobile()) document.body.classList.add('is-mobile');
-    if (isTablet()) document.body.classList.add('is-tablet');
-    if (isDesktop()) document.body.classList.add('is-desktop');
-});
-
 document.addEventListener('DOMContentLoaded', () => { 
     renderAppContent(); 
     setTimeout(() => { initScrollReveal(); }, 100);
+    // Initialize and apply site settings from dashboard
     initSiteSettings();
     initPageEditor();
     initHomeImageManager();
@@ -504,20 +563,27 @@ const defaultSettings = {
 };
 
 function applySettings(settings) {
+    // Theme
     if (settings.theme === 'light') document.body.classList.add('light-theme');
     else document.body.classList.remove('light-theme');
 
+    // Accent color
     document.documentElement.style.setProperty('--accent-blue', settings.accent);
 
+    // Sidebars
     const left = document.querySelector('.left-sidebar');
     const right = document.querySelector('.right-navigation');
     if (left) left.style.display = settings.showSidebars ? '' : 'none';
     if (right) right.style.display = settings.showSidebars ? '' : 'none';
 
+    // Custom cursor
     const cyberCursorEl = document.querySelector('.custom-cyber-cursor');
     if (cyberCursorEl) cyberCursorEl.style.display = settings.customCursor ? '' : 'none';
 
+    // Base font size
     document.body.style.fontSize = settings.baseFontSize + 'px';
+
+    // Persist
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
 }
 
@@ -531,6 +597,7 @@ function loadSettings() {
 function initSiteSettings() {
     const settings = loadSettings();
 
+    // Elements
     const themeEl = document.getElementById('settings-theme');
     const accentEl = document.getElementById('settings-accent');
     const sidebarsEl = document.getElementById('settings-sidebars');
@@ -547,16 +614,19 @@ function initSiteSettings() {
     if (fontsizeEl) fontsizeEl.value = settings.baseFontSize;
     if (fontsizeLabel) fontsizeLabel.innerText = settings.baseFontSize;
 
+    // Apply immediately
     applySettings(settings);
 
+    // Live preview on change
     if (accentEl) accentEl.addEventListener('input', (e) => {
         document.documentElement.style.setProperty('--accent-blue', e.target.value);
     });
     if (fontsizeEl) fontsizeEl.addEventListener('input', (e) => {
-        if (fontsizeLabel) fontsizeLabel.innerText = e.target.value;
+        fontsizeLabel.innerText = e.target.value;
         document.body.style.fontSize = e.target.value + 'px';
     });
 
+    // Save/apply
     if (saveBtn) saveBtn.addEventListener('click', () => {
         const newSettings = {
             theme: themeEl?.value || defaultSettings.theme,
@@ -566,11 +636,15 @@ function initSiteSettings() {
             baseFontSize: Number(fontsizeEl?.value) || defaultSettings.baseFontSize
         };
         applySettings(newSettings);
-        saveBtn.classList.add('btn-saved');
-        setTimeout(() => saveBtn.classList.remove('btn-saved'), 900);
-        showDashToast?.('Site settings applied');
+            // small visual feedback
+            if (saveBtn) {
+                saveBtn.classList.add('btn-saved');
+                setTimeout(() => saveBtn.classList.remove('btn-saved'), 900);
+            }
+            showDashToast('Site settings applied');
     });
 
+    // Reset
     if (resetBtn) resetBtn.addEventListener('click', () => {
         localStorage.removeItem(SETTINGS_KEY);
         applySettings(defaultSettings);
@@ -614,6 +688,7 @@ function applyPageContent(content) {
     if (bioEl) bioEl.innerText = content.bioShort;
     if (watermarkEl) watermarkEl.innerText = content.watermark;
 
+    // re-run scroll reveal for updated content
     resetAndTriggerScrollReveal();
 }
 
@@ -673,7 +748,7 @@ function refreshPageImagesList() {
             savePageImages(updated);
             refreshPageImagesList();
             renderPageImages();
-            showDashToast?.('Image removed');
+            showDashToast('Image removed');
         });
     });
 }
@@ -695,10 +770,10 @@ function initHomeImageManager() {
             const images = loadPageImages();
             images.unshift(url);
             savePageImages(images);
-            if (imageUrlInput) imageUrlInput.value = '';
+            imageUrlInput.value = '';
             refreshPageImagesList();
             renderPageImages();
-            showDashToast?.('Image URL added');
+            showDashToast('Image URL added');
         });
     }
 }
@@ -715,6 +790,7 @@ function initPageEditor() {
 
     const content = loadPageContent();
 
+    // populate editor fields
     if (heroInput) heroInput.value = content.heroHTML.replace(/<br>/g, '\n').replace(/<[^>]*>/g, '');
     if (heroHtmlInput) heroHtmlInput.value = content.heroHTML;
     if (heroDescInput) heroDescInput.value = content.heroDesc;
@@ -722,8 +798,10 @@ function initPageEditor() {
     if (bioInput) bioInput.value = content.bioShort;
     if (watermarkInput) watermarkInput.value = content.watermark;
 
+    // apply content to page
     applyPageContent(content);
 
+    // live preview
     if (heroHtmlInput) heroHtmlInput.addEventListener('input', (e) => {
         const preview = Object.assign({}, content, { heroHTML: e.target.value });
         applyPageContent(preview);
@@ -745,6 +823,7 @@ function initPageEditor() {
         applyPageContent(preview);
     });
 
+    // Save
     if (saveBtn) saveBtn.addEventListener('click', () => {
         const newContent = {
             heroHTML: heroHtmlInput?.value || defaultPageContent.heroHTML,
@@ -758,7 +837,7 @@ function initPageEditor() {
         alert('✅ Page content saved.');
     });
 
-    // 🟢 تم تكملة الجزء المقطوع بالكامل وتصليحه هنا:
+    // Reset
     if (resetBtn) resetBtn.addEventListener('click', () => {
         localStorage.removeItem(PAGE_CONTENT_KEY);
         applyPageContent(defaultPageContent);
@@ -771,14 +850,259 @@ function initPageEditor() {
     });
 }
 
-// دالة مساعدة لعرض التنبيهات الصغيرة في لوحة التحكم بشكل سلس
-function showDashToast(message) {
-    console.log("System Toast:", message);
-    // لو عندك عنصر في الـ HTML مخصص للـ Toast هيظهر هنا تلقائياً
-    const toastEl = document.getElementById('dash-toast');
-    if (toastEl) {
-        toastEl.innerText = message;
-        toastEl.classList.add('show');
-        setTimeout(() => toastEl.classList.remove('show'), 3000);
+/* ======================== Profile & Meta Info Editor ======================== */
+const PROFILE_KEY = 'eslam_profile_data';
+const defaultProfile = {
+    name: 'Eslam',
+    title: 'Full-Stack & Automation Eng.',
+    image: 'https://media.discordapp.net/attachments/1375604483546943549/1510833096793128960/profile.jpeg',
+    email: 'esslam942@gmail.com',
+    phone: '+20 112 7134 174',
+    experience: 4,
+    commits: 140,
+    languages: 'English, Arabic'
+};
+
+function applyProfileData(profile) {
+    const profileImg = document.querySelector('.avatar');
+    const profileName = document.querySelector('.profile-info h2');
+    const profileTitle = document.querySelector('.profile-info p');
+    const bioShort = document.querySelector('.bio-short');
+    const metaItems = document.querySelectorAll('.meta-item');
+
+    if (profileImg) profileImg.src = profile.image;
+    if (profileName) profileName.textContent = profile.name;
+    if (profileTitle) profileTitle.textContent = profile.title;
+    if (bioShort) bioShort.textContent = bioShort.textContent; // Keep existing
+    
+    if (metaItems.length >= 5) {
+        metaItems[0].innerHTML = `<i class="fas fa-briefcase"></i> ${profile.experience}+ years of experience`;
+        metaItems[1].innerHTML = `<i class="fas fa-code-branch"></i> ${profile.commits}+ Git Commits`;
+        metaItems[2].innerHTML = `<i class="fas fa-globe"></i> ${profile.languages}`;
+        metaItems[3].innerHTML = `<i class="fas fa-envelope"></i> ${profile.email}`;
+        metaItems[4].innerHTML = `<i class="fas fa-phone"></i> ${profile.phone}`;
     }
+
+    localStorage.setItem(PROFILE_KEY, JSON.stringify(profile));
 }
+
+function loadProfileData() {
+    const raw = localStorage.getItem(PROFILE_KEY);
+    return raw ? Object.assign({}, defaultProfile, JSON.parse(raw)) : defaultProfile;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const profile = loadProfileData();
+    applyProfileData(profile);
+
+    // Profile form handlers
+    const profileNameEl = document.getElementById('profile-name');
+    const profileTitleEl = document.getElementById('profile-title');
+    const profileImageEl = document.getElementById('profile-image');
+    const profileEmailEl = document.getElementById('profile-email');
+    const profilePhoneEl = document.getElementById('profile-phone');
+    const metaExperienceEl = document.getElementById('meta-experience');
+    const metaCommitsEl = document.getElementById('meta-commits');
+    const metaLanguagesEl = document.getElementById('meta-languages');
+    const profileSaveBtn = document.getElementById('profile-save');
+    const profileResetBtn = document.getElementById('profile-reset');
+
+    if (profileNameEl) profileNameEl.value = profile.name;
+    if (profileTitleEl) profileTitleEl.value = profile.title;
+    if (profileImageEl) profileImageEl.value = profile.image;
+    if (profileEmailEl) profileEmailEl.value = profile.email;
+    if (profilePhoneEl) profilePhoneEl.value = profile.phone;
+    if (metaExperienceEl) metaExperienceEl.value = profile.experience;
+    if (metaCommitsEl) metaCommitsEl.value = profile.commits;
+    if (metaLanguagesEl) metaLanguagesEl.value = profile.languages;
+
+    if (profileSaveBtn) profileSaveBtn.addEventListener('click', () => {
+        const newProfile = {
+            name: profileNameEl?.value || defaultProfile.name,
+            title: profileTitleEl?.value || defaultProfile.title,
+            image: profileImageEl?.value || defaultProfile.image,
+            email: profileEmailEl?.value || defaultProfile.email,
+            phone: profilePhoneEl?.value || defaultProfile.phone,
+            experience: Number(metaExperienceEl?.value) || defaultProfile.experience,
+            commits: Number(metaCommitsEl?.value) || defaultProfile.commits,
+            languages: metaLanguagesEl?.value || defaultProfile.languages
+        };
+        applyProfileData(newProfile);
+        alert('✅ Profile updated successfully.');
+    });
+
+    if (profileResetBtn) profileResetBtn.addEventListener('click', () => {
+        localStorage.removeItem(PROFILE_KEY);
+        applyProfileData(defaultProfile);
+        if (profileNameEl) profileNameEl.value = defaultProfile.name;
+        if (profileTitleEl) profileTitleEl.value = defaultProfile.title;
+        if (profileImageEl) profileImageEl.value = defaultProfile.image;
+        if (profileEmailEl) profileEmailEl.value = defaultProfile.email;
+        if (profilePhoneEl) profilePhoneEl.value = defaultProfile.phone;
+        if (metaExperienceEl) metaExperienceEl.value = defaultProfile.experience;
+        if (metaCommitsEl) metaCommitsEl.value = defaultProfile.commits;
+        if (metaLanguagesEl) metaLanguagesEl.value = defaultProfile.languages;
+        alert('⚠️ Profile reset to defaults.');
+    });
+});
+
+/* ======================== Social Links Editor ======================== */
+const SOCIAL_KEY = 'eslam_social_links';
+const defaultSocial = {
+    whatsapp: 'https://wa.me/201127134174',
+    instagram: 'https://www.instagram.com/ess942200',
+    tiktok: 'https://www.tiktok.com/@ess.ved',
+    github: 'https://github.com/eslam',
+    linkedin: 'https://linkedin.com/in/eslam',
+    cv: 'assets/cv.pdf'
+};
+
+function applySocialLinks(social) {
+    const whatsappLinks = document.querySelectorAll('a[href*="wa.me"]');
+    const instagramLinks = document.querySelectorAll('a[href*="instagram"]');
+    const tiktokLinks = document.querySelectorAll('a[href*="tiktok"]');
+    
+    whatsappLinks.forEach(link => link.href = social.whatsapp);
+    instagramLinks.forEach(link => link.href = social.instagram);
+    tiktokLinks.forEach(link => link.href = social.tiktok);
+    
+    const cvLink = document.querySelector('a[download]');
+    if (cvLink) cvLink.href = social.cv;
+
+    localStorage.setItem(SOCIAL_KEY, JSON.stringify(social));
+}
+
+function loadSocialLinks() {
+    const raw = localStorage.getItem(SOCIAL_KEY);
+    return raw ? Object.assign({}, defaultSocial, JSON.parse(raw)) : defaultSocial;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    const social = loadSocialLinks();
+    applySocialLinks(social);
+
+    const whatsappEl = document.getElementById('social-whatsapp');
+    const instagramEl = document.getElementById('social-instagram');
+    const tiktokEl = document.getElementById('social-tiktok');
+    const githubEl = document.getElementById('social-github');
+    const linkedinEl = document.getElementById('social-linkedin');
+    const cvEl = document.getElementById('social-cv');
+    const socialSaveBtn = document.getElementById('social-save');
+    const socialResetBtn = document.getElementById('social-reset');
+
+    if (whatsappEl) whatsappEl.value = social.whatsapp;
+    if (instagramEl) instagramEl.value = social.instagram;
+    if (tiktokEl) tiktokEl.value = social.tiktok;
+    if (githubEl) githubEl.value = social.github;
+    if (linkedinEl) linkedinEl.value = social.linkedin;
+    if (cvEl) cvEl.value = social.cv;
+
+    if (socialSaveBtn) socialSaveBtn.addEventListener('click', () => {
+        const newSocial = {
+            whatsapp: whatsappEl?.value || defaultSocial.whatsapp,
+            instagram: instagramEl?.value || defaultSocial.instagram,
+            tiktok: tiktokEl?.value || defaultSocial.tiktok,
+            github: githubEl?.value || defaultSocial.github,
+            linkedin: linkedinEl?.value || defaultSocial.linkedin,
+            cv: cvEl?.value || defaultSocial.cv
+        };
+        applySocialLinks(newSocial);
+        alert('✅ Social links updated.');
+    });
+
+    if (socialResetBtn) socialResetBtn.addEventListener('click', () => {
+        localStorage.removeItem(SOCIAL_KEY);
+        applySocialLinks(defaultSocial);
+        if (whatsappEl) whatsappEl.value = defaultSocial.whatsapp;
+        if (instagramEl) instagramEl.value = defaultSocial.instagram;
+        if (tiktokEl) tiktokEl.value = defaultSocial.tiktok;
+        if (githubEl) githubEl.value = defaultSocial.github;
+        if (linkedinEl) linkedinEl.value = defaultSocial.linkedin;
+        if (cvEl) cvEl.value = defaultSocial.cv;
+        alert('⚠️ Social links reset to defaults.');
+    });
+});
+
+/* ======================== Language Content Editor ======================== */
+const LANG_CONTENT_KEY = 'eslam_lang_content';
+
+function showDashToast(msg, timeout = 1400) {
+    let toast = document.querySelector('.dash-toast');
+    const dashboard = document.querySelector('#dashboard .dashboard-container');
+    if (!dashboard) return;
+    if (!toast) {
+        toast = document.createElement('div');
+        toast.className = 'dash-toast';
+        dashboard.appendChild(toast);
+    }
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), timeout);
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Language content editors
+    const enTitle = document.getElementById('lang-en-title');
+    const enDesc = document.getElementById('lang-en-desc');
+    const techEn = document.getElementById('lang-tech-en');
+    const langSave = document.getElementById('lang-save');
+    const langReset = document.getElementById('lang-reset');
+
+    // load saved
+    try {
+        const raw = localStorage.getItem(LANG_CONTENT_KEY);
+        if (raw) {
+            const parsed = JSON.parse(raw);
+            if (parsed.en) {
+                if (enTitle) enTitle.value = parsed.en.heroTitle || '';
+                if (enDesc) enDesc.value = parsed.en.heroDesc || '';
+                if (techEn) techEn.value = parsed.en.techText || '';
+            }
+            // Arabic content removed — ignore parsed.ar
+        }
+    } catch (err) { console.warn('Failed to load lang edits', err); }
+
+    if (langSave) langSave.addEventListener('click', () => {
+        const payload = {
+            en: {
+                heroTitle: enTitle?.value || '',
+                heroDesc: enDesc?.value || '',
+                techText: techEn?.value || ''
+            }
+        };
+        localStorage.setItem(LANG_CONTENT_KEY, JSON.stringify(payload));
+        // Apply immediately by reconstructing content and calling applyLanguage
+        const selectedLang = localStorage.getItem('selectedLanguage') || 'en';
+        // build content object similar to script-enhanced
+        const content = {};
+        try {
+            const stored = JSON.parse(localStorage.getItem('eslam_lang_content') || '{}');
+            // read default content via calling initLanguageSwitcher defaults not accessible here, so merge with existing
+            content.en = stored.en || { heroTitle: enTitle?.value || '', heroDesc: enDesc?.value || '', bio: '', techTitle: '', techText: techEn?.value || '' };
+        } catch (e) {
+            content.en = { heroTitle: enTitle?.value || '', heroDesc: enDesc?.value || '', bio: '', techTitle: '', techText: techEn?.value || '' };
+        }
+        if (typeof applyLanguage === 'function') applyLanguage(selectedLang, content);
+        showDashToast('Translations saved');
+    });
+
+    if (langReset) langReset.addEventListener('click', () => {
+        localStorage.removeItem(LANG_CONTENT_KEY);
+        showDashToast('Translations reset');
+        // reload page language
+        const selectedLang = localStorage.getItem('selectedLanguage') || 'en';
+        if (typeof initLanguageSwitcher === 'function') initLanguageSwitcher();
+        if (typeof applyLanguage === 'function') applyLanguage(selectedLang, JSON.parse(localStorage.getItem('eslam_lang_content') || '{}'));
+    });
+
+    // add collapse toggles to admin cards for better UX
+    document.querySelectorAll('.admin-card').forEach(card => {
+        if (card.querySelector('.card-controls')) return;
+        const controls = document.createElement('div'); controls.className = 'card-controls';
+        const btn = document.createElement('button'); btn.className = 'card-toggle'; btn.type = 'button'; btn.innerText = 'Toggle';
+        btn.addEventListener('click', (e) => { e.stopPropagation(); card.classList.toggle('collapsed'); });
+        controls.appendChild(btn);
+        card.appendChild(controls);
+    });
+});
+
