@@ -29,10 +29,16 @@ function initFirebase() {
 }
 
 /* ---------------- Lightbox gallery ---------------- */
-const lightbox = document.getElementById('project-lightbox');
-const lightboxImg = lightbox?.querySelector('.lightbox-img');
-const lightboxCaption = lightbox?.querySelector('.lightbox-caption');
-const lightboxLive = lightbox?.querySelector('.lightbox-live');
+const getLightboxElements = () => {
+    const lightbox = document.getElementById('project-lightbox');
+    return {
+        lightbox,
+        lightboxImg: lightbox?.querySelector('.lightbox-img') ?? null,
+        lightboxCaption: lightbox?.querySelector('.lightbox-caption') ?? null,
+        lightboxLive: lightbox?.querySelector('.lightbox-live') ?? null
+    };
+};
+
 let currentGallery = [];
 let currentIndex = 0;
 
@@ -42,11 +48,20 @@ function openProjectGallery(projectId, startIndex = 0) {
     currentGallery = proj.gallery.slice();
     currentIndex = startIndex;
     showLightboxImage(currentIndex);
+    const { lightbox, lightboxLive } = getLightboxElements();
     if (lightbox) { lightbox.setAttribute('aria-hidden', 'false'); document.body.style.overflow = 'hidden'; }
-    if (lightboxLive && proj.url && proj.url !== '#') { lightboxLive.href = proj.url; lightboxLive.style.display = 'inline-block'; } else if (lightboxLive) { lightboxLive.style.display = 'none'; }
+    if (lightboxLive) {
+        if (proj.url && proj.url !== '#') {
+            lightboxLive.href = proj.url;
+            lightboxLive.style.display = 'inline-block';
+        } else {
+            lightboxLive.style.display = 'none';
+        }
+    }
 }
 
 function closeLightbox() {
+    const { lightbox } = getLightboxElements();
     if (lightbox) { lightbox.setAttribute('aria-hidden', 'true'); document.body.style.overflow = ''; }
 }
 
@@ -54,8 +69,9 @@ function showLightboxImage(index) {
     if (!currentGallery || currentGallery.length === 0) return;
     currentIndex = (index + currentGallery.length) % currentGallery.length;
     const src = currentGallery[currentIndex];
+    const { lightboxImg, lightboxCaption } = getLightboxElements();
     if (lightboxImg) { lightboxImg.src = src; }
-    if (lightboxCaption) { lightboxCaption.textContent = `${currentIndex+1} / ${currentGallery.length}`; }
+    if (lightboxCaption) { lightboxCaption.textContent = `${currentIndex + 1} / ${currentGallery.length}`; }
 }
 
 function nextLightbox() { showLightboxImage(currentIndex + 1); }
@@ -112,6 +128,21 @@ const deviceType = {
 };
 
 
+function safeLoadArray(key, defaultData) {
+    try {
+        const raw = localStorage.getItem(key);
+        const parsed = raw ? JSON.parse(raw) : null;
+        if (!Array.isArray(parsed) || parsed.length === 0) {
+            localStorage.setItem(key, JSON.stringify(defaultData));
+            return defaultData.slice();
+        }
+        return parsed;
+    } catch (error) {
+        localStorage.setItem(key, JSON.stringify(defaultData));
+        return defaultData.slice();
+    }
+}
+
 // إدارة وتخزين بيانات المنتجات والمشاريع محلياً
 let defaultProducts = [
     { id: 1, title: "NextJS 14 SaaS Boilerplate", category: "Script", price: "49.00", desc: "Production-ready SaaS starter with PostgreSQL and secure auth.", img: "https://source.unsplash.com/600x400/?saas,web,dashboard" },
@@ -120,8 +151,7 @@ let defaultProducts = [
     { id: 4, title: "Landing / Website (Small)", category: "Service", price: "50.00+", desc: "Small marketing/portfolio websites — base price $50, adjustable by scope.", img: "https://source.unsplash.com/600x400/?website,landing,design" },
     { id: 5, title: "Android & iOS App (Basic)", category: "Service", price: "250.00+", desc: "Basic cross-platform mobile app starter — pricing starts at $250.", img: "https://source.unsplash.com/600x400/?mobile,app,ui" }
 ];
-if (!localStorage.getItem('eslam_products')) { localStorage.setItem('eslam_products', JSON.stringify(defaultProducts)); }
-let products = JSON.parse(localStorage.getItem('eslam_products')) || [];
+let products = safeLoadArray('eslam_products', defaultProducts);
 
 let defaultProjects = [
     { id: 1, title: "Eslam | Full Stack Developer & Bot Architect", img: "https://via.placeholder.com/900x380?text=eslam.dev+project", imgHover: "https://via.placeholder.com/900x380?text=eslam.dev+hover", url: "https://wap-tau.vercel.app/#home",
@@ -167,8 +197,7 @@ let defaultProjects = [
         ]
     }
 ];
-if (!localStorage.getItem('eslam_projects')) { localStorage.setItem('eslam_projects', JSON.stringify(defaultProjects)); }
-let projectsData = JSON.parse(localStorage.getItem('eslam_projects')) || [];
+let projectsData = safeLoadArray('eslam_projects', defaultProjects);
 
 // =================================================================
 // 2. ربط الفورمات المحلية عند وجودها
@@ -318,21 +347,25 @@ function renderAppContent() {
     const inventoryDisplay = document.getElementById('inventory-display');
     if(storeGrid) {
         storeGrid.innerHTML = '';
-        products.forEach(prod => {
-            storeGrid.innerHTML += `
-                <div class="product-card scroll-reveal">
-                    <div class="product-tag">${prod.category}</div>
-                    <img src="${prod.img}" alt="${prod.title}" class="product-img" onerror="this.src='https://via.placeholder.com/300x140/1c1c1c/ffffff?text=Digital+Module'">
-                    <div class="product-info">
-                        <h3>${prod.title}</h3>
-                        <p>${prod.desc}</p>
-                        <div class="product-footer">
-                            <span class="price">$${prod.price}</span>
-                            <button class="buy-btn" onclick="window.open('https://wa.me/201127134174?text=Hi Eslam, I want to purchase module: ${prod.title}')">Buy Now</button>
+        if (!Array.isArray(products) || products.length === 0) {
+            storeGrid.innerHTML = '<div class="empty-state">No digital products available yet. Check back soon or update your product list.</div>';
+        } else {
+            products.forEach(prod => {
+                storeGrid.innerHTML += `
+                    <div class="product-card scroll-reveal">
+                        <div class="product-tag">${prod.category}</div>
+                        <img src="${prod.img}" alt="${prod.title}" class="product-img" onerror="this.src='https://via.placeholder.com/300x140/1c1c1c/ffffff?text=Digital+Module'">
+                        <div class="product-info">
+                            <h3>${prod.title}</h3>
+                            <p>${prod.desc}</p>
+                            <div class="product-footer">
+                                <span class="price">$${prod.price}</span>
+                                <button class="buy-btn" onclick="window.open('https://wa.me/201127134174?text=Hi Eslam, I want to purchase module: ${encodeURIComponent(prod.title)}')">Buy Now</button>
+                            </div>
                         </div>
-                    </div>
-                </div>`;
-        });
+                    </div>`;
+            });
+        }
     }
     if(inventoryDisplay) {
         inventoryDisplay.innerHTML = '';
@@ -345,12 +378,14 @@ function renderAppContent() {
     const projectsInventory = document.getElementById('projects-inventory-display');
     if(projectsGrid) {
         projectsGrid.innerHTML = '';
-        projectsData.forEach(proj => {
-                // create gallery-aware project card
+        if (!Array.isArray(projectsData) || projectsData.length === 0) {
+            projectsGrid.innerHTML = '<div class="empty-state">No projects to display yet. Add new work or reset the project list.</div>';
+        } else {
+            projectsData.forEach(proj => {
                 const galleryJson = JSON.stringify(proj.gallery || []);
                 projectsGrid.innerHTML += `
                     <div class="project-card-premium scroll-reveal">
-                        <button class="gallery-btn" onclick='openProjectGallery(${proj.id}, 0); event.stopPropagation();'>Gallery</button>
+                        <button class="gallery-btn" onclick='event.stopPropagation(); openProjectGallery(${proj.id}, 0);'>Gallery</button>
                         <div class="proj-header">
                             <h3>${proj.title}</h3>
                             <i class="fas fa-arrow-up-right-from-square" title="Open live"></i>
@@ -360,7 +395,8 @@ function renderAppContent() {
                             <img src="${proj.imgHover || proj.img}" class="img-hover-alt" alt="${proj.title} Preview" onerror="this.style.display='none'">
                         </div>
                     </div>`;
-        });
+            });
+        }
     }
     if(projectsInventory) {
         projectsInventory.innerHTML = '';
@@ -1105,4 +1141,3 @@ document.addEventListener('DOMContentLoaded', () => {
         card.appendChild(controls);
     });
 });
-
