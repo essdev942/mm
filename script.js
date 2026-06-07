@@ -8,56 +8,76 @@ const deviceType = {
 };
 
 // =================================================================
-// 2. إدارة وتخزين البيانات (مشاريع ومنتجات) بدون قواعد بيانات
+// 2. بيانات الموقع (قم بتعديل الروابط والأسماء هنا لتظهر دائماً على Vercel)
 // =================================================================
-function safeLoadArray(key, defaultData) {
-    try {
-        const raw = localStorage.getItem(key);
-        const parsed = raw ? JSON.parse(raw) : null;
-        if (!Array.isArray(parsed) || parsed.length === 0) {
-            localStorage.setItem(key, JSON.stringify(defaultData));
-            return defaultData.slice();
-        }
-        return parsed;
-    } catch (error) {
-        localStorage.setItem(key, JSON.stringify(defaultData));
-        return defaultData.slice();
+
+// 🛒 بيانات المنتجات (المتجر)
+const products = [
+    { 
+        id: 1, 
+        title: "NextJS 14 SaaS Boilerplate", 
+        category: "Script", 
+        price: "49.00", 
+        desc: "Production-ready SaaS starter with PostgreSQL & iron-clad Auth layer.", 
+        img: "https://placehold.co/600x400/1c1c1c/white?text=SaaS+Boilerplate" 
+    },
+    { 
+        id: 2, 
+        title: "Automated Lead Engine Bot", 
+        category: "Bot", 
+        price: "35.00", 
+        desc: "High-performance Go/Python automated pipeline for business scraping.", 
+        img: "https://placehold.co/600x400/1c1c1c/white?text=Lead+Bot" 
     }
-}
-
-let defaultProducts = [
-    { id: 1, title: "NextJS 14 SaaS Boilerplate", category: "Script", price: "49.00", desc: "Production-ready SaaS starter with PostgreSQL.", img: "https://placehold.co/600x400/1c1c1c/white?text=SaaS+Boilerplate" },
-    { id: 2, title: "Automated Lead Engine Bot", category: "Bot", price: "35.00", desc: "Automated pipeline for lead scraping.", img: "https://placehold.co/600x400/1c1c1c/white?text=Lead+Bot" }
 ];
-let products = safeLoadArray('eslam_products', defaultProducts);
 
-let defaultProjects = [
-    { id: 1, title: "Eslam.dev Portfolio", img: "https://placehold.co/900x380/1c1c1c/white?text=Project+Alpha", imgHover: "https://placehold.co/900x380/007acc/white?text=Preview+Alpha", url: "https://wap-tau.vercel.app/#home", gallery: ["https://placehold.co/800x600"] },
-    { id: 2, title: "Napoli Egy Network", img: "https://placehold.co/900x380/1c1c1c/white?text=Napoli+Project", imgHover: "https://placehold.co/900x380/007acc/white?text=Napoli+Hover", url: "https://napoliegy.net", gallery: ["https://placehold.co/800x602"] }
+// 💼 بيانات المشاريع (الأعمال السابقة)
+const projectsData = [
+    { 
+        id: 1, 
+        title: "Fintech Dashboard Suite", 
+        img: "https://placehold.co/900x380/1c1c1c/white?text=Fintech+Main", 
+        imgHover: "https://placehold.co/900x380/007acc/white?text=Fintech+Hover", 
+        url: "https://example.com", // ضع الرابط هنا أو اتركه فارغاً لإخفاء زر Open Live
+        gallery: [
+            "https://placehold.co/800x600/1c1c1c/white?text=Gallery+1", 
+            "https://placehold.co/800x601/1c1c1c/white?text=Gallery+2"
+        ] 
+    },
+    { 
+        id: 2, 
+        title: "AI Cloud Automation Bot", 
+        img: "https://placehold.co/900x380/1c1c1c/white?text=AI+Bot", 
+        imgHover: "https://placehold.co/900x380/007acc/white?text=AI+Bot+Hover", 
+        url: "", // بدون رابط
+        gallery: [
+            "https://placehold.co/800x602/1c1c1c/white?text=Bot+Preview"
+        ] 
+    }
 ];
-let projectsData = safeLoadArray('eslam_projects', defaultProjects);
 
 // =================================================================
-// 3. عرض المشاريع والمنتجات (الربط المباشر مع واتساب)
+// 3. عرض المشاريع والمنتجات في الصفحة
 // =================================================================
 function renderAppContent() {
+    // ريندر المتجر
     const storeGrid = document.querySelector('.store-grid');
     if(storeGrid) {
         storeGrid.innerHTML = '';
-        if (!Array.isArray(products) || products.length === 0) {
+        if (products.length === 0) {
             storeGrid.innerHTML = '<div class="empty-state">No products available yet.</div>';
         } else {
             products.forEach(prod => {
                 storeGrid.innerHTML += `
                     <div class="product-card scroll-reveal">
                         <div class="product-tag">${prod.category}</div>
-                        <img src="${prod.img}" alt="${prod.title}" class="product-img" onerror="this.src='https://via.placeholder.com/300x140/1c1c1c/ffffff?text=Product'">
+                        <img src="${prod.img}" alt="${prod.title}" class="product-img" onerror="this.src='https://via.placeholder.com/300x140/1c1c1c/ffffff?text=Image+Error'">
                         <div class="product-info">
                             <h3>${prod.title}</h3>
                             <p>${prod.desc}</p>
                             <div class="product-footer">
                                 <span class="price">$${prod.price}</span>
-                                <button class="buy-btn" onclick="window.open('https://wa.me/201127134174?text=Hi Eslam, I want to purchase: ${encodeURIComponent(prod.title)}')">Buy Now</button>
+                                <button class="buy-btn" onclick="window.open('https://wa.me/201127134174?text=Hi Eslam, I want to purchase module: ${encodeURIComponent(prod.title)}')">Buy Now</button>
                             </div>
                         </div>
                     </div>`;
@@ -65,23 +85,23 @@ function renderAppContent() {
         }
     }
 
+    // ريندر المشاريع
     const projectsGrid = document.getElementById('projects-grid-display');
     if(projectsGrid) {
         projectsGrid.innerHTML = '';
-        if (!Array.isArray(projectsData) || projectsData.length === 0) {
+        if (projectsData.length === 0) {
             projectsGrid.innerHTML = '<div class="empty-state">No projects to display yet.</div>';
         } else {
             projectsData.forEach(proj => {
-                const galleryJson = JSON.stringify(proj.gallery || []).replace(/'/g, "&apos;");
                 projectsGrid.innerHTML += `
                     <div class="project-card-premium scroll-reveal">
                         <button class="gallery-btn" onclick='event.stopPropagation(); openProjectGallery(${proj.id}, 0);'>Gallery</button>
                         <div class="proj-header">
                             <h3>${proj.title}</h3>
-                            ${(proj.url && proj.url !== '#') ? '<i class="fas fa-arrow-up-right-from-square" title="Open live"></i>' : ''}
+                            ${(proj.url && proj.url.trim() !== '') ? `<a href="${proj.url}" target="_blank" style="color: inherit;"><i class="fas fa-arrow-up-right-from-square" title="Open live"></i></a>` : ''}
                         </div>
                         <div class="project-img-wrapper">
-                            <img src="${proj.img}" class="img-primary" alt="${proj.title}" onerror="this.src='https://via.placeholder.com/400x200/1c1c1c/ffffff?text=Project'">
+                            <img src="${proj.img}" class="img-primary" alt="${proj.title}" onerror="this.src='https://via.placeholder.com/400x200/1c1c1c/ffffff?text=Image+Error'">
                             <img src="${proj.imgHover || proj.img}" class="img-hover-alt" alt="${proj.title} Preview" onerror="this.style.display='none'">
                         </div>
                     </div>`;
@@ -97,16 +117,16 @@ const getLightboxElements = () => {
     const lightbox = document.getElementById('project-lightbox');
     return {
         lightbox,
-        lightboxImg: lightbox?.querySelector('.lightbox-img') ?? null,
-        lightboxCaption: lightbox?.querySelector('.lightbox-caption') ?? null,
-        lightboxLive: lightbox?.querySelector('.lightbox-live') ?? null
+        lightboxImg: lightbox?.querySelector('.lightbox-img'),
+        lightboxCaption: lightbox?.querySelector('.lightbox-caption'),
+        lightboxLive: lightbox?.querySelector('.lightbox-live')
     };
 };
 
 let currentGallery = [];
 let currentIndex = 0;
 
-function openProjectGallery(projectId, startIndex = 0) {
+window.openProjectGallery = function(projectId, startIndex = 0) {
     const proj = projectsData.find(p => p.id === projectId);
     if (!proj || !proj.gallery || proj.gallery.length === 0) return;
     
@@ -120,16 +140,15 @@ function openProjectGallery(projectId, startIndex = 0) {
         document.body.style.overflow = 'hidden'; 
     }
     
-    // إخفاء أو إظهار زر Open Live بناءً على وجود رابط حقيقي
     if (lightboxLive) {
-        if (proj.url && proj.url !== '#' && proj.url.trim() !== '') {
+        if (proj.url && proj.url.trim() !== '') {
             lightboxLive.href = proj.url;
             lightboxLive.style.display = 'inline-block';
         } else {
             lightboxLive.style.display = 'none';
         }
     }
-}
+};
 
 function showLightboxImage(index) {
     if (!currentGallery || currentGallery.length === 0) return;
@@ -151,7 +170,7 @@ function nextLightbox() { showLightboxImage(currentIndex + 1); }
 function prevLightbox() { showLightboxImage(currentIndex - 1); }
 
 // =================================================================
-// 5. تحسين الأداء: الماوس البرمجي (موحد ونظيف)
+// 5. الماوس البرمجي والتأثيرات
 // =================================================================
 function initCyberCursor() {
     const cyberCursor = document.querySelector('.custom-cyber-cursor');
@@ -163,18 +182,15 @@ function initCyberCursor() {
     }
 
     cyberCursor.style.display = 'block';
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-    let curX = mouseX;
-    let curY = mouseY;
+    let mouseX = window.innerWidth / 2, mouseY = window.innerHeight / 2;
+    let curX = mouseX, curY = mouseY;
 
     window.addEventListener('mousemove', (e) => {
-        mouseX = e.clientX;
-        mouseY = e.clientY;
+        mouseX = e.clientX; mouseY = e.clientY;
     });
 
     function animate() {
-        curX += (mouseX - curX) * 0.2; // سرعة استجابة الماوس
+        curX += (mouseX - curX) * 0.2; 
         curY += (mouseY - curY) * 0.2;
         cyberCursor.style.left = curX + 'px';
         cyberCursor.style.top = curY + 'px';
@@ -182,7 +198,7 @@ function initCyberCursor() {
     }
     animate();
 
-    const interactives = 'a, button, .tab, .project-card-premium, .product-card, input, textarea';
+    const interactives = 'a, button, .tab, .project-card-premium, .product-card, input, textarea, .index-links li';
     document.addEventListener('mouseover', (e) => {
         if (e.target.closest(interactives)) cyberCursor.classList.add('hovered');
     });
@@ -192,8 +208,24 @@ function initCyberCursor() {
 }
 
 // =================================================================
-// 6. التبويبات (Tabs) وتأثيرات الظهور
+// 6. التنقل بين الصفحات والفهرس
 // =================================================================
+function scrollToSection(pageId) {
+    const targetTab = document.querySelector(`.tab[data-target="${pageId}"]`);
+    if (targetTab) {
+        targetTab.click();
+    }
+}
+
+function updateIndexStyle(pageId) {
+    document.querySelectorAll('.index-links li').forEach(link => {
+        link.classList.remove('active-link');
+        if(link.getAttribute('onclick') && link.getAttribute('onclick').includes(pageId)) {
+            link.classList.add('active-link');
+        }
+    });
+}
+
 document.addEventListener('click', function(e) {
     if(e.target && e.target.closest('.tab')) {
         const tabEl = e.target.closest('.tab');
@@ -205,6 +237,7 @@ document.addEventListener('click', function(e) {
             page.classList.remove('active');
             if (page.id === target) page.classList.add('active');
         });
+        updateIndexStyle(target);
         resetAndTriggerScrollReveal();
     }
 });
@@ -218,8 +251,11 @@ function initScrollReveal() {
                 obs.unobserve(entry.target);
             }
         });
-    }, { threshold: 0.1 });
-    targets.forEach(t => observer.observe(t));
+    }, { threshold: 0.05 });
+    targets.forEach(t => {
+        observer.observe(t);
+        if (t.getBoundingClientRect().top < window.innerHeight) t.classList.add('revealed');
+    });
 }
 
 function resetAndTriggerScrollReveal() {
@@ -228,14 +264,17 @@ function resetAndTriggerScrollReveal() {
 }
 
 // =================================================================
-// 7. تهيئة الصفحة عند التحميل (DOMContentLoaded)
+// 7. التهيئة النهائية
 // =================================================================
 document.addEventListener('DOMContentLoaded', () => {
+    // تنظيف أي بيانات قديمة عالقة في المتصفح كانت تسبب مشكلة ظهور المربعات الفارغة
+    localStorage.removeItem('eslam_projects');
+    localStorage.removeItem('eslam_products');
+
     renderAppContent();
     initCyberCursor();
-    initScrollReveal();
+    setTimeout(initScrollReveal, 100);
 
-    // أزرار معرض الصور
     const lb = document.getElementById('project-lightbox');
     if (lb) {
         lb.querySelector('.lightbox-close')?.addEventListener('click', closeLightbox);
@@ -250,10 +289,5 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (e.key === 'ArrowLeft') prevLightbox();
             }
         });
-    }
-
-    // إعداد EmailJS إذا كنت تستخدمه
-    if (typeof emailjs !== 'undefined') {
-        emailjs.init("YOUR_PUBLIC_KEY");
     }
 });
