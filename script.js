@@ -1,32 +1,6 @@
 // =================================================================
-// 1. تهيئة Firebase وقاعدة البيانات السحابية
+// 1. تهيئة البيانات وإدارة الحالة المحلية
 // =================================================================
-const firebaseConfig = {
-    apiKey: "AIzaSyCoju04Ko7nri7TnZhiGXSzfFg-tqiBhfQc",
-    authDomain: "eslam-portfolio-db.firebaseapp.com",
-    databaseURL: "https://eslam-portfolio-db-default-rtdb.firebaseio.com",
-    projectId: "eslam-portfolio-db",
-    storageBucket: "eslam-portfolio-db.appspot.com",
-    messagingSenderId: "5271284397",
-    appId: "1:5271284397:web:f18b8a95ff24f6f9c7424"
-};
-
-let db = null;
-let dbInitialized = false;
-
-function initFirebase() {
-    if (typeof firebase === 'undefined') {
-        console.warn('Firebase SDK failed to load. Falling back to local storage.');
-        return;
-    }
-
-    if (!firebase.apps.length) {
-        firebase.initializeApp(firebaseConfig);
-    }
-    db = firebase.firestore();
-    dbInitialized = true;
-    listenToCloudData();
-}
 
 /* ---------------- Lightbox gallery ---------------- */
 const getLightboxElements = () => {
@@ -96,30 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
-function listenToCloudData() {
-    if (!db) return;
-
-    db.collection('products').orderBy('updatedAt', 'desc').onSnapshot((snapshot) => {
-        products = [];
-        snapshot.forEach((doc) => {
-            products.push({ id: doc.id, ...doc.data() });
-        });
-        renderAppContent();
-    }, (error) => {
-        console.error('Firestore products error:', error);
-    });
-
-    db.collection('projects').orderBy('updatedAt', 'desc').onSnapshot((snapshot) => {
-        projectsData = [];
-        snapshot.forEach((doc) => {
-            projectsData.push({ id: doc.id, ...doc.data() });
-        });
-        renderAppContent();
-    }, (error) => {
-        console.error('Firestore projects error:', error);
-    });
-}
-
 // كشف نوع جهاز الزائر للتوافقية
 const deviceType = {
     isMobile: () => window.innerWidth <= 768 || 'ontouchstart' in window || navigator.maxTouchPoints > 0,
@@ -145,56 +95,21 @@ function safeLoadArray(key, defaultData) {
 
 // إدارة وتخزين بيانات المنتجات والمشاريع محلياً
 let defaultProducts = [
-    { id: 1, title: "NextJS 14 SaaS Boilerplate", category: "Script", price: "49.00", desc: "Production-ready SaaS starter with PostgreSQL and secure auth.", img: "https://source.unsplash.com/600x400/?saas,web,dashboard" },
-    { id: 2, title: "Automated Lead Engine Bot", category: "Bot", price: "35.00", desc: "High-performance automated pipeline for lead scraping and enrichment.", img: "https://source.unsplash.com/600x400/?automation,robot,code" },
-    { id: 3, title: "Telegram Payment & Order Bot (Custom)", category: "Service", price: "50.00", desc: "Telegram bot for payment confirmations and order management (Salla integration).", img: "https://source.unsplash.com/600x400/?telegram,bot,payment" },
-    { id: 4, title: "Landing / Website (Small)", category: "Service", price: "50.00+", desc: "Small marketing/portfolio websites — base price $50, adjustable by scope.", img: "https://source.unsplash.com/600x400/?website,landing,design" },
-    { id: 5, title: "Android & iOS App (Basic)", category: "Service", price: "250.00+", desc: "Basic cross-platform mobile app starter — pricing starts at $250.", img: "https://source.unsplash.com/600x400/?mobile,app,ui" }
+    { id: 1, title: "NextJS 14 SaaS Boilerplate", category: "Script", price: "49.00", desc: "Production-ready SaaS starter with PostgreSQL.", img: "https://placehold.co/600x400/1c1c1c/white?text=SaaS+Boilerplate" },
+    { id: 2, title: "Automated Lead Engine Bot", category: "Bot", price: "35.00", desc: "Automated pipeline for lead scraping.", img: "https://placehold.co/600x400/1c1c1c/white?text=Lead+Bot" },
+    { id: 3, title: "Telegram Payment Bot", category: "Service", price: "50.00", desc: "Bot for payment confirmations.", img: "https://placehold.co/600x400/1c1c1c/white?text=Telegram+Bot" }
 ];
 let products = safeLoadArray('eslam_products', defaultProducts);
 
 let defaultProjects = [
-    { id: 1, title: "Eslam | Full Stack Developer & Bot Architect", img: "https://via.placeholder.com/900x380?text=eslam.dev+project", imgHover: "https://via.placeholder.com/900x380?text=eslam.dev+hover", url: "https://wap-tau.vercel.app/#home",
-        gallery: [
-            "https://ibb.co/QvDp8WWG",
-            "https://ibb.co/twrNXk3W",
-            "https://ibb.co/JWdXp8LF",
-            "https://ibb.co/Qj6HcgzQ",
-            "https://ibb.co/V0z2gT4d",
-            "https://ibb.co/Dqzgr42",
-            "https://ibb.co/1tqZwKQz",
-            "https://ibb.co/gFwmQ9Ps",
-            "https://ibb.co/xn4fDwK"
-        ]
+    { id: 1, title: "Eslam.dev Portfolio", img: "https://placehold.co/900x380/1c1c1c/white?text=Project+Alpha", imgHover: "https://placehold.co/900x380/007acc/white?text=Preview+Alpha", url: "https://wap-tau.vercel.app/#home",
+        gallery: ["https://placehold.co/800x600", "https://placehold.co/800x601"]
     },
-    { id: 2, title: "napoliegy.net", img: "https://via.placeholder.com/900x380?text=napoliegy.net", imgHover: "https://via.placeholder.com/900x380?text=napoliegy.net+hover", url: "https://napoliegy.net",
-        gallery: [
-            "https://ibb.co/G4L7vJ3g",
-            "https://ibb.co/8LrT8Nkq",
-            "https://ibb.co/3msrK3gx",
-            "https://ibb.co/JW11BJNg",
-            "https://ibb.co/qMxZDMV5",
-            "https://ibb.co/Fqyn0ZgT",
-            "https://ibb.co/zh2H1gQg",
-            "https://ibb.co/tTk7rzxx"
-        ]
+    { id: 2, title: "Napoli Egy Network", img: "https://placehold.co/900x380/1c1c1c/white?text=Napoli+Project", imgHover: "https://placehold.co/900x380/007acc/white?text=Napoli+Hover", url: "https://napoliegy.net",
+        gallery: ["https://placehold.co/800x602"]
     },
-    { id: 3, title: "vernisegy.com", img: "https://via.placeholder.com/900x380?text=vernisegy.com", imgHover: "https://via.placeholder.com/900x380?text=vernisegy+hover", url: "https://vernisegy.com",
-        gallery: [
-            "https://ibb.co/jPxjbNfM",
-            "https://ibb.co/spjnXyjX",
-            "https://ibb.co/r2zB2ByV",
-            "https://ibb.co/WWyWnjXG",
-            "https://ibb.co/QF4xqfbn"
-        ]
-    },
-    { id: 4, title: "Telegram Payment Bot for Salla", img: "https://via.placeholder.com/900x380?text=Telegram+Salla+Bot", imgHover: "https://via.placeholder.com/900x380?text=Telegram+Salla+Bot+hover", url: "#",
-        gallery: [
-            "https://ibb.co/MxmdwbgF",
-            "https://ibb.co/mFVWBWm4",
-            "https://ibb.co/W4HDgPtX",
-            "https://ibb.co/7tcL2dFs"
-        ]
+    { id: 3, title: "Vernis Egy Web", img: "https://placehold.co/900x380/1c1c1c/white?text=Vernis+Project", imgHover: "https://placehold.co/900x380/007acc/white?text=Vernis+Hover", url: "https://vernisegy.com",
+        gallery: ["https://placehold.co/800x603"]
     }
 ];
 let projectsData = safeLoadArray('eslam_projects', defaultProjects);
@@ -203,8 +118,6 @@ let projectsData = safeLoadArray('eslam_projects', defaultProjects);
 // 2. ربط الفورمات المحلية عند وجودها
 // =================================================================
 document.addEventListener('DOMContentLoaded', () => {
-    initFirebase();
-
     const addProductForm = document.getElementById('add-product-form');
     if (addProductForm) {
         addProductForm.addEventListener('submit', function(e) {
@@ -214,29 +127,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 category: document.getElementById('prod-category').value,
                 price: document.getElementById('prod-price').value,
                 img: document.getElementById('prod-img').value,
-                desc: document.getElementById('prod-desc').value,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                desc: document.getElementById('prod-desc').value
             };
 
-            if (dbInitialized && db) {
-                db.collection('products').add(product)
-                    .then(() => {
-                        this.reset();
-                        alert('🚀 Product pushed to Firebase!');
-                        resetAndTriggerScrollReveal();
-                    })
-                    .catch((error) => {
-                        console.error('Failed to add product to Firebase:', error);
-                        alert('Failed to add product to Firebase. Check console.');
-                    });
-            } else {
-                products.push({ id: Date.now(), ...product });
-                localStorage.setItem('eslam_products', JSON.stringify(products));
-                renderAppContent();
-                this.reset();
-                alert('🚀 Product pushed locally (offline mode).');
-                resetAndTriggerScrollReveal();
-            }
+            products.push({ id: Date.now(), ...product });
+            localStorage.setItem('eslam_products', JSON.stringify(products));
+            renderAppContent();
+            this.reset();
+            alert('🚀 Product added locally.');
+            resetAndTriggerScrollReveal();
         });
     }
 
@@ -248,35 +147,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 title: document.getElementById('proj-title').value,
                 img: document.getElementById('proj-img').value,
                 imgHover: document.getElementById('proj-img-hover').value,
-                url: document.getElementById('proj-url').value,
-                updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                url: document.getElementById('proj-url').value
             };
 
-            if (dbInitialized && db) {
-                db.collection('projects').add(project)
-                    .then(() => {
-                        this.reset();
-                        alert('🛡️ Project deployed to Firebase successfully!');
-                        resetAndTriggerScrollReveal();
-                    })
-                    .catch((error) => {
-                        console.error('Failed to add project to Firebase:', error);
-                        alert('Failed to add project to Firebase. Check console.');
-                    });
-            } else {
-                projectsData.push({ id: Date.now(), ...project });
-                localStorage.setItem('eslam_projects', JSON.stringify(projectsData));
-                renderAppContent();
-                this.reset();
-                alert('🛡️ Project deployed locally (offline mode).');
-                resetAndTriggerScrollReveal();
-            }
+            projectsData.push({ id: Date.now(), ...project });
+            localStorage.setItem('eslam_projects', JSON.stringify(projectsData));
+            renderAppContent();
+            this.reset();
+            alert('🛡️ Project added locally.');
+            resetAndTriggerScrollReveal();
         });
     }
 });
 // 🟢 تهيئة مكتبة EmailJS برقم الـ Public Key الخاص بك
 (function() { 
-    emailjs.init("YOUR_PUBLIC_KEY"); 
+    if (typeof emailjs !== 'undefined') emailjs.init("YOUR_PUBLIC_KEY"); 
 })();
 
 // 📱 كشف نوع الجهاز والتوافقية
@@ -407,28 +292,12 @@ function renderAppContent() {
 }
 
 function deleteProduct(id) {
-    if (dbInitialized && db && typeof id === 'string') {
-        db.collection('products').doc(id).delete()
-            .then(() => {
-                showDashToast?.('Product deleted from Firebase');
-            })
-            .catch((error) => console.error('Failed to delete product from Firebase:', error));
-        return;
-    }
     products = products.filter(p => p.id !== id);
     localStorage.setItem('eslam_products', JSON.stringify(products));
     renderAppContent();
 }
 
 function deleteProject(id) {
-    if (dbInitialized && db && typeof id === 'string') {
-        db.collection('projects').doc(id).delete()
-            .then(() => {
-                showDashToast?.('Project deleted from Firebase');
-            })
-            .catch((error) => console.error('Failed to delete project from Firebase:', error));
-        return;
-    }
     projectsData = projectsData.filter(p => p.id !== id);
     localStorage.setItem('eslam_projects', JSON.stringify(projectsData));
     renderAppContent();
@@ -909,8 +778,7 @@ function applyProfileData(profile) {
     if (profileImg) profileImg.src = profile.image;
     if (profileName) profileName.textContent = profile.name;
     if (profileTitle) profileTitle.textContent = profile.title;
-    if (bioShort) bioShort.textContent = bioShort.textContent; // Keep existing
-    
+
     if (metaItems.length >= 5) {
         metaItems[0].innerHTML = `<i class="fas fa-briefcase"></i> ${profile.experience}+ years of experience`;
         metaItems[1].innerHTML = `<i class="fas fa-code-branch"></i> ${profile.commits}+ Git Commits`;
@@ -1043,7 +911,7 @@ document.addEventListener('DOMContentLoaded', () => {
             cv: cvEl?.value || defaultSocial.cv
         };
         applySocialLinks(newSocial);
-        alert('✅ Social links updated.');
+        showDashToast?.('✅ Social links updated.');
     });
 
     if (socialResetBtn) socialResetBtn.addEventListener('click', () => {
@@ -1055,7 +923,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (githubEl) githubEl.value = defaultSocial.github;
         if (linkedinEl) linkedinEl.value = defaultSocial.linkedin;
         if (cvEl) cvEl.value = defaultSocial.cv;
-        alert('⚠️ Social links reset to defaults.');
+        showDashToast?.('⚠️ Social links reset to defaults.');
     });
 });
 
